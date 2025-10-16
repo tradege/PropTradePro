@@ -9,6 +9,9 @@ import RegisterForm from './components/auth/RegisterForm';
 // Pages
 import Dashboard from './pages/Dashboard';
 import Programs from './pages/Programs';
+import ProgramDetails from './pages/ProgramDetails';
+import KYC from './pages/KYC';
+import Profile from './pages/Profile';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -96,6 +99,30 @@ function App() {
           element={
             <ProtectedRoute>
               <Programs />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/programs/:id"
+          element={
+            <ProtectedRoute>
+              <ProgramDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/kyc"
+          element={
+            <ProtectedRoute>
+              <KYC />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />
