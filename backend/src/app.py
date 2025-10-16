@@ -3,8 +3,10 @@ Main Flask application factory
 """
 from flask import Flask, jsonify
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from src.config import get_config
-from src.database import init_db
+from src.database import db, init_db
 import logging
 
 
@@ -22,8 +24,18 @@ def create_app(config_name=None):
     # Initialize extensions
     init_db(app)
     
-    # Configure CORS
-    CORS(app, origins=app.config['CORS_ORIGINS'], supports_credentials=True)
+    # Enable CORS
+    CORS(app, origins=app.config['CORS_ORIGINS'])
+    
+    # Rate Limiting
+    if app.config.get('RATELIMIT_ENABLED'):
+        limiter = Limiter(
+            app=app,
+            key_func=get_remote_address,
+            storage_uri=app.config.get('RATELIMIT_STORAGE_URL'),
+            default_limits=["200 per day", "50 per hour"]
+        )
+        app.limiter = limiter
     
     # Configure logging
     logging.basicConfig(

@@ -31,7 +31,7 @@ class Config:
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
     
     # CORS
-    CORS_ORIGINS = os.getenv('CORS_ORIGINS', '*').split(',')
+    CORS_ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://localhost:5173').split(',')
     
     # Stripe
     STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
@@ -82,6 +82,11 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     """Production configuration"""
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    
+    # Override to ensure SECRET_KEY is set
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    if not SECRET_KEY:
+        raise ValueError('SECRET_KEY must be set in production')
     
     # Ensure critical settings are set in production
     @classmethod
