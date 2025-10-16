@@ -3,6 +3,7 @@ Authentication routes
 """
 from flask import Blueprint, request, jsonify, g
 from src.services.auth_service import AuthService
+from src.services.email_service import EmailService
 from src.utils.decorators import token_required
 from src.utils.validators import (
     validate_email_format,
@@ -49,7 +50,8 @@ def register():
             tenant_id=data.get('tenant_id')
         )
         
-        # TODO: Send verification email
+        # Send verification email
+        EmailService.send_verification_email(user, verification_token.token)
         
         return jsonify({
             'message': 'User registered successfully',
@@ -188,6 +190,9 @@ def verify_email(token):
     try:
         user = AuthService.verify_email(token)
         
+        # Send welcome email
+        EmailService.send_welcome_email(user)
+        
         return jsonify({
             'message': 'Email verified successfully',
             'user': user.to_dict()
@@ -210,7 +215,9 @@ def request_password_reset():
     try:
         reset_token = AuthService.request_password_reset(data['email'])
         
-        # TODO: Send password reset email
+        # Send password reset email
+        if reset_token:
+            EmailService.send_password_reset_email(reset_token.user, reset_token.token)
         
         # Always return success (don't reveal if email exists)
         return jsonify({

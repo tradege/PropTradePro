@@ -34,9 +34,13 @@ def create_app(config_name=None):
     # Register blueprints
     from src.routes.auth import auth_bp
     from src.routes.programs import programs_bp
+    from src.routes.payments import payments_bp
+    from src.routes.uploads import uploads_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/v1/auth')
     app.register_blueprint(programs_bp, url_prefix='/api/v1/programs')
+    app.register_blueprint(payments_bp, url_prefix='/api/v1/payments')
+    app.register_blueprint(uploads_bp, url_prefix='/api/v1/uploads')
     
     # Health check endpoint
     @app.route('/health', methods=['GET'])
@@ -56,7 +60,9 @@ def create_app(config_name=None):
             'endpoints': {
                 'health': '/health',
                 'auth': '/api/v1/auth',
-                'programs': '/api/v1/programs'
+                'programs': '/api/v1/programs',
+                'payments': '/api/v1/payments',
+                'uploads': '/api/v1/uploads'
             }
         }), 200
     
