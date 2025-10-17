@@ -8,19 +8,26 @@
     "build": "vite build",
     "preview": "vite preview"
   },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.9.4",
+    "zustand": "^5.0.8",
+    "axios": "^1.12.2",
+    "lucide-react": "^0.546.0",
+    "@stripe/react-stripe-js": "^5.2.0",
+    "@stripe/stripe-js": "^8.1.0",
+    "recharts": "^3.2.1"
+  },
   "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@tailwindcss/postcss": "^4.1.14",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.14",
     "vite": "^7.1.7"
-  },
-  "dependencies": {
-    "@stripe/react-stripe-js": "^5.2.0",
-    "@stripe/stripe-js": "^8.1.0",
-    "axios": "^1.12.2",
-    "lucide-react": "^0.546.0",
-    "react-router-dom": "^7.9.4",
-    "recharts": "^3.2.1",
-    "zustand": "^5.0.8"
   }
 }
+
