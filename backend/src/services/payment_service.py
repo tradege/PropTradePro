@@ -22,6 +22,40 @@ class PaymentService:
         return api_key
     
     @staticmethod
+    def _get_or_create_customer(user):
+        """Get or create Stripe customer for user"""
+        # Check if user has stripe_customer_id stored
+        if hasattr(user, 'stripe_customer_id') and user.stripe_customer_id:
+            try:
+                # Verify customer exists
+                customer = stripe.Customer.retrieve(user.stripe_customer_id)
+                return customer.id
+            except stripe.error.StripeError:
+                # Customer doesn't exist, create new one
+                pass
+        
+        # Create new customer
+        try:
+            customer = stripe.Customer.create(
+                email=user.email,
+                name=f"{user.first_name} {user.last_name}",
+                metadata={
+                    'user_id': user.id
+                }
+            )
+            
+            # Store customer ID (if user model supports it)
+            if hasattr(user, 'stripe_customer_id'):
+                user.stripe_customer_id = customer.id
+                db.session.commit()
+            
+            return customer.id
+        except stripe.error.StripeError as e:
+            logger.error(f'Failed to create Stripe customer: {str(e)}')
+            # Fallback: proceed without customer ID
+            return None
+    
+    @staticmethod
     def create_payment_intent(challenge, user):
         """Create Stripe payment intent for challenge purchase"""
         if not PaymentService._get_stripe_key():
@@ -32,20 +66,29 @@ class PaymentService:
             # Calculate amount (in cents)
             amount = int(challenge.program.calculate_total_price(challenge.addons) * 100)
             
-            # Create payment intent
-            intent = stripe.PaymentIntent.create(
-                amount=amount,
-                currency='usd',
-                customer=user.email,
-                metadata={
+            # Get or create Stripe customer
+            customer_id = PaymentService._get_or_create_customer(user)
+            
+            # Prepare payment intent parameters
+            intent_params = {
+                'amount': amount,
+                'currency': 'usd',
+                'metadata': {
                     'challenge_id': challenge.id,
                     'user_id': user.id,
                     'program_id': challenge.program_id,
                     'program_name': challenge.program.name
                 },
-                description=f'PropTradePro - {challenge.program.name}',
-                receipt_email=user.email
-            )
+                'description': f'PropTradePro - {challenge.program.name}',
+                'receipt_email': user.email
+            }
+            
+            # Add customer ID if available
+            if customer_id:
+                intent_params['customer'] = customer_id
+            
+            # Create payment intent
+            intent = stripe.PaymentIntent.create(**intent_params)
             
             # Store payment intent ID
             challenge.payment_id = intent.id
@@ -72,36 +115,52 @@ class PaymentService:
         """Confirm payment and activate challenge"""
         if not PaymentService._get_stripe_key():
             logger.error('Stripe API key not configured')
-            return False
+            return {'status': 'error', 'message': 'Payment system not configured'}
         
         try:
             # Retrieve payment intent
             intent = stripe.PaymentIntent.retrieve(payment_intent_id)
             
-            if intent.status != 'succeeded':
-                logger.warning(f'Payment intent {payment_intent_id} not succeeded: {intent.status}')
-                return False
+            # Handle different statuses
+            if intent.status == 'succeeded':
+                # Find challenge
+                challenge = Challenge.query.filter_by(payment_id=payment_intent_id).first()
+                if not challenge:
+                    logger.error(f'Challenge not found for payment intent {payment_intent_id}')
+                    return {'status': 'error', 'message': 'Challenge not found'}
+                
+                # Update challenge status
+                challenge.payment_status = 'paid'
+                challenge.status = 'active'
+                db.session.commit()
+                
+                logger.info(f'Payment confirmed for challenge {challenge.id}')
+                return {'status': 'succeeded', 'confirmed': True}
+                
+            elif intent.status == 'requires_action':
+                logger.info(f'Payment intent {payment_intent_id} requires action')
+                return {
+                    'status': 'requires_action',
+                    'confirmed': False,
+                    'client_secret': intent.client_secret,
+                    'next_action': intent.next_action
+                }
+                
+            elif intent.status == 'processing':
+                logger.info(f'Payment intent {payment_intent_id} is processing')
+                return {'status': 'processing', 'confirmed': False}
+                
+            else:
+                logger.warning(f'Payment intent {payment_intent_id} status: {intent.status}')
+                return {'status': intent.status, 'confirmed': False}
             
-            # Find challenge
-            challenge = Challenge.query.filter_by(payment_id=payment_intent_id).first()
-            if not challenge:
-                logger.error(f'Challenge not found for payment intent {payment_intent_id}')
-                return False
-            
-            # Update challenge status
-            challenge.payment_status = 'paid'
-            challenge.status = 'active'
-            db.session.commit()
-            
-            logger.info(f'Payment confirmed for challenge {challenge.id}')
-            return True
             
         except stripe.error.StripeError as e:
             logger.error(f'Stripe error: {str(e)}')
-            return False
+            return {'status': 'error', 'message': str(e)}
         except Exception as e:
             logger.error(f'Payment confirmation failed: {str(e)}')
-            return False
+            return {'status': 'error', 'message': 'Payment confirmation failed'}
     
     @staticmethod
     def refund_payment(challenge, reason=None):
