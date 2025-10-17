@@ -73,21 +73,20 @@ services:
         python src/app.py
       "
 
-  # Frontend (placeholder for future)
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   container_name: proptradepro-frontend
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ./frontend:/app
-  #     - /app/node_modules
-  #   depends_on:
-  #     - backend
-  #   networks:
-  #     - proptradepro-network
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: proptradepro-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - proptradepro-network
+    environment:
+      - VITE_API_URL=http://localhost:5000
 
 volumes:
   postgres_data:
