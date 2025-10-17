@@ -12,6 +12,7 @@ import Programs from './pages/Programs';
 import ProgramDetails from './pages/ProgramDetails';
 import KYC from './pages/KYC';
 import Profile from './pages/Profile';
+import ChallengeDetails from './pages/ChallengeDetails';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -128,6 +129,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/challenges/:id"
+          element={
+            <ProtectedRoute>
+              <ChallengeDetails />
             </ProtectedRoute>
           }
         />
