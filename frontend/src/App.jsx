@@ -13,6 +13,11 @@ import ProgramDetails from './pages/ProgramDetails';
 import KYC from './pages/KYC';
 import Profile from './pages/Profile';
 
+// Admin Pages
+import AdminDashboard from './pages/admin/AdminDashboard';
+import UserManagement from './pages/admin/UserManagement';
+import KYCApproval from './pages/admin/KYCApproval';
+
 // Protected Route Component
 function ProtectedRoute({ children }) {
   const { isAuthenticated, isLoading } = useAuthStore();
@@ -123,6 +128,32 @@ function App() {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute>
+              <UserManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/kyc"
+          element={
+            <ProtectedRoute>
+              <KYCApproval />
             </ProtectedRoute>
           }
         />
