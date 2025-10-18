@@ -7,6 +7,7 @@ import LoginForm from './components/auth/LoginForm';
 import RegisterForm from './components/auth/RegisterForm';
 
 // Pages
+import HomePage from './pages/HomePage';
 import Dashboard from './pages/Dashboard';
 import Programs from './pages/Programs';
 import ProgramDetails from './pages/ProgramDetails';
@@ -167,8 +168,9 @@ function App() {
           }
         />
 
-        {/* Default Route */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        {/* Public Home Page - Guest Mode */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
 
         {/* 404 */}
         <Route
