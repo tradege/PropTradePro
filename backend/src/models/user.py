@@ -37,12 +37,48 @@ class User(db.Model, TimestampMixin):
     two_factor_secret = db.Column(db.String(32))
     
     # KYC Status
-    kyc_status = db.Column(db.String(20), default='pending')  # pending, approved, rejected
+    kyc_status = db.Column(db.String(20), default='not_submitted')  # not_submitted, pending, approved, rejected
     kyc_submitted_at = db.Column(db.DateTime)
     kyc_verified_at = db.Column(db.DateTime)
+    kyc_approved_at = db.Column(db.DateTime)
+    kyc_approved_by = db.Column(db.Integer)  # Admin user ID
+    kyc_rejected_at = db.Column(db.DateTime)
+    kyc_rejected_by = db.Column(db.Integer)  # Admin user ID
+    kyc_rejection_reason = db.Column(db.Text)
+    kyc_admin_notes = db.Column(db.Text)
+    
+    # KYC Documents - ID Proof
+    kyc_id_status = db.Column(db.String(20), default='not_uploaded')  # not_uploaded, pending, approved, rejected
+    kyc_id_url = db.Column(db.String(500))  # Document URL
+    kyc_id_uploaded_at = db.Column(db.DateTime)
+    kyc_id_notes = db.Column(db.Text)
+    
+    # KYC Documents - Address Proof
+    kyc_address_status = db.Column(db.String(20), default='not_uploaded')
+    kyc_address_url = db.Column(db.String(500))
+    kyc_address_uploaded_at = db.Column(db.DateTime)
+    kyc_address_notes = db.Column(db.Text)
+    
+    # KYC Documents - Selfie
+    kyc_selfie_status = db.Column(db.String(20), default='not_uploaded')
+    kyc_selfie_url = db.Column(db.String(500))
+    kyc_selfie_uploaded_at = db.Column(db.DateTime)
+    kyc_selfie_notes = db.Column(db.Text)
+    
+    # KYC Documents - Bank Statement
+    kyc_bank_status = db.Column(db.String(20), default='not_uploaded')
+    kyc_bank_url = db.Column(db.String(500))
+    kyc_bank_uploaded_at = db.Column(db.DateTime)
+    kyc_bank_notes = db.Column(db.Text)
     
     # Role and Permissions
-    role = db.Column(db.String(20), default='user', nullable=False)  # user, admin, support
+    role = db.Column(db.String(20), default='trader', nullable=False)  # supermaster, master, agent, trader
+    
+    # Hierarchy (MLM Structure)
+    parent_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)  # Who created this user
+    level = db.Column(db.Integer, default=0, nullable=False, index=True)  # Depth in hierarchy (0 = top)
+    tree_path = db.Column(db.String(500), index=True)  # Path in tree: "1/5/23/45" for fast queries
+    commission_rate = db.Column(db.Numeric(5, 2), default=0.00)  # Custom commission rate for this user
     
     # Tenant (White Label)
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=True)
@@ -54,6 +90,10 @@ class User(db.Model, TimestampMixin):
     # Relationships
     tenant = db.relationship('Tenant', back_populates='users')
     challenges = db.relationship('Challenge', back_populates='user', lazy='dynamic')
+    
+    # Hierarchy Relationships
+    parent = db.relationship('User', remote_side=[id], backref='children', foreign_keys=[parent_id])
+    # children accessible via backref
     
     def __repr__(self):
         return f'<User {self.email}>'
@@ -148,6 +188,62 @@ class User(db.Model, TimestampMixin):
         if ip_address:
             self.last_login_ip = ip_address
         db.session.commit()
+    
+    # Hierarchy Methods
+    def get_all_descendants(self):
+        """Get all users in the downline (recursive)"""
+        descendants = []
+        for child in self.children:
+            descendants.append(child)
+            descendants.extend(child.get_all_descendants())
+        return descendants
+    
+    def get_direct_children(self):
+        """Get only direct children (1 level down)"""
+        return self.children
+    
+    def get_ancestors(self):
+        """Get all users in the upline"""
+        ancestors = []
+        current = self.parent
+        while current:
+            ancestors.append(current)
+            current = current.parent
+        return ancestors
+    
+    def update_tree_path(self):
+        """Update tree_path based on parent"""
+        if self.parent:
+            parent_path = self.parent.tree_path or str(self.parent.id)
+            self.tree_path = f"{parent_path}/{self.id}"
+        else:
+            self.tree_path = str(self.id)
+    
+    def can_create_user(self, target_role):
+        """Check if this user can create a user with target_role"""
+        role_hierarchy = {
+            'supermaster': ['supermaster', 'master', 'agent', 'trader'],
+            'master': ['master', 'agent', 'trader'],
+            'agent': ['agent', 'trader'],
+            'trader': []  # Traders cannot create users
+        }
+        return target_role in role_hierarchy.get(self.role, [])
+    
+    def get_downline_count(self):
+        """Get total count of users in downline"""
+        return len(self.get_all_descendants())
+    
+    def get_downline_by_level(self, max_level=None):
+        """Get downline organized by level"""
+        result = {}
+        for user in self.get_all_descendants():
+            level_diff = user.level - self.level
+            if max_level and level_diff > max_level:
+                continue
+            if level_diff not in result:
+                result[level_diff] = []
+            result[level_diff].append(user)
+        return result
     
     def to_dict(self, include_sensitive=False):
         """Convert user to dictionary"""

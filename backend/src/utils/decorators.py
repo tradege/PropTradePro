@@ -93,3 +93,19 @@ def verified_email_required(f):
     
     return decorated
 
+
+
+def admin_required(f):
+    """Decorator to require admin role"""
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not hasattr(g, 'current_user'):
+            return jsonify({'error': 'Authentication required'}), 401
+        
+        if g.current_user.role != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        
+        return f(*args, **kwargs)
+    
+    return decorated
+

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import useAuthStore from './store/authStore';
+import Notification from './components/Notification';
 
 // Auth Pages
 import Login from './pages/Login';
@@ -9,14 +10,10 @@ import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 
-// Pages
+// Public Pages
 import HomePage from './pages/NewHomePage';
-import Dashboard from './pages/Dashboard';
 import Programs from './pages/NewPrograms';
 import ProgramDetails from './pages/ProgramDetails';
-import KYC from './pages/KYC';
-import Profile from './pages/Profile';
-import ChallengeDetails from './pages/ChallengeDetails';
 import AboutUs from './pages/AboutUs';
 import HowItWorks from './pages/HowItWorks';
 import FAQ from './pages/FAQ';
@@ -25,10 +22,34 @@ import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import RiskDisclosure from './pages/RiskDisclosure';
 
+// Shared Pages
+import Dashboard from './pages/Dashboard';
+import KYC from './pages/KYC';
+import Profile from './pages/Profile';
+import ChallengeDetails from './pages/ChallengeDetails';
+
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import UserManagement from './pages/admin/UserManagement';
 import KYCApproval from './pages/admin/KYCApproval';
+import ProgramsManagement from './pages/admin/ProgramsManagement';
+import PaymentsManagement from './pages/admin/PaymentsManagement';
+import Settings from './pages/admin/Settings';
+
+// Agent Pages
+import AgentDashboard from './pages/agent/AgentDashboard';
+import TradersManagement from './pages/agent/TradersManagement';
+import Commissions from './pages/agent/Commissions';
+import Reports from './pages/agent/Reports';
+
+// Trader Pages
+import TraderDashboard from './pages/trader/TraderDashboard';
+import TradingHistory from './pages/trader/TradingHistory';
+import Withdrawals from './pages/trader/Withdrawals';
+import Documents from './pages/trader/Documents';
+
+// Guards
+import RoleGuard from './components/guards/RoleGuard';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -83,8 +104,22 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Notification />
       <Routes>
         {/* Public Routes */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/programs" element={<Programs />} />
+        <Route path="/programs/:id" element={<ProgramDetails />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/risk-disclosure" element={<RiskDisclosure />} />
+
+        {/* Auth Routes */}
         <Route
           path="/login"
           element={
@@ -105,7 +140,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
-        {/* Protected Routes */}
+        {/* Shared Protected Routes */}
         <Route
           path="/dashboard"
           element={
@@ -113,14 +148,6 @@ function App() {
               <Dashboard />
             </ProtectedRoute>
           }
-        />
-        <Route
-          path="/programs"
-          element={<Programs />}
-        />
-        <Route
-          path="/programs/:id"
-          element={<ProgramDetails />}
         />
         <Route
           path="/kyc"
@@ -152,7 +179,9 @@ function App() {
           path="/admin"
           element={
             <ProtectedRoute>
-              <AdminDashboard />
+              <RoleGuard allowedRoles={['super_admin', 'admin']}>
+                <AdminDashboard />
+              </RoleGuard>
             </ProtectedRoute>
           }
         />
@@ -160,7 +189,29 @@ function App() {
           path="/admin/users"
           element={
             <ProtectedRoute>
-              <UserManagement />
+              <RoleGuard allowedRoles={['super_admin', 'admin']}>
+                <UserManagement />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/programs"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['super_admin', 'admin']}>
+                <ProgramsManagement />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/payments"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['super_admin', 'admin']}>
+                <PaymentsManagement />
+              </RoleGuard>
             </ProtectedRoute>
           }
         />
@@ -168,25 +219,106 @@ function App() {
           path="/admin/kyc"
           element={
             <ProtectedRoute>
-              <KYCApproval />
+              <RoleGuard allowedRoles={['super_admin', 'admin']}>
+                <KYCApproval />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/settings"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['super_admin', 'admin']}>
+                <Settings />
+              </RoleGuard>
             </ProtectedRoute>
           }
         />
 
-        {/* Public Home Page - Guest Mode */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/home" element={<HomePage />} />
-        
-        {/* Public Information Pages */}
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/how-it-works" element={<HowItWorks />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/contact" element={<Contact />} />
-        
-        {/* Legal Pages */}
-        <Route path="/terms-of-service" element={<TermsOfService />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/risk-disclosure" element={<RiskDisclosure />} />
+        {/* Agent Routes */}
+        <Route
+          path="/agent"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['agent']}>
+                <AgentDashboard />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/agent/traders"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['agent']}>
+                <TradersManagement />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/agent/commissions"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['agent']}>
+                <Commissions />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/agent/reports"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['agent']}>
+                <Reports />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Trader Routes */}
+        <Route
+          path="/trader"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['trader']}>
+                <TraderDashboard />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/trader/history"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['trader']}>
+                <TradingHistory />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/trader/withdrawals"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['trader']}>
+                <Withdrawals />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/trader/documents"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['trader']}>
+                <Documents />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
 
         {/* 404 */}
         <Route
@@ -196,8 +328,8 @@ function App() {
               <div className="text-center">
                 <h1 className="text-6xl font-bold text-gray-900 mb-4">404</h1>
                 <p className="text-xl text-gray-600 mb-8">Page not found</p>
-                <a href="/dashboard" className="btn btn-primary">
-                  Go to Dashboard
+                <a href="/" className="btn btn-primary">
+                  Go to Home
                 </a>
               </div>
             </div>

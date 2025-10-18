@@ -50,6 +50,13 @@ def create_app(config_name=None):
     from src.routes.payments import payments_bp
     from src.routes.uploads import uploads_bp
     from src.routes.agents import agents_bp
+    from src.routes.admin import admin_bp
+    from src.routes.traders import traders_bp
+    from src.routes.kyc import kyc_bp
+    from src.routes.challenges import challenges_bp
+    from src.routes.reports import reports_bp
+    from src.routes.hierarchy import hierarchy_bp
+    from src.routes.crm import crm_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/v1/auth')
     app.register_blueprint(profile_bp, url_prefix='/api/v1/profile')
@@ -57,6 +64,13 @@ def create_app(config_name=None):
     app.register_blueprint(payments_bp, url_prefix='/api/v1/payments')
     app.register_blueprint(uploads_bp, url_prefix='/api/v1/uploads')
     app.register_blueprint(agents_bp, url_prefix='/api/v1/agents')
+    app.register_blueprint(admin_bp, url_prefix='/api/v1/admin')
+    app.register_blueprint(traders_bp, url_prefix='/api/v1/traders')
+    app.register_blueprint(kyc_bp, url_prefix='/api/v1/kyc')
+    app.register_blueprint(challenges_bp, url_prefix='/api/v1/challenges')
+    app.register_blueprint(reports_bp, url_prefix='/api/v1/reports')
+    app.register_blueprint(hierarchy_bp, url_prefix='/api/v1/hierarchy')
+    app.register_blueprint(crm_bp, url_prefix='/api/v1/crm')
     
     # Health check endpoint
     @app.route('/health', methods=['GET'])
@@ -80,7 +94,14 @@ def create_app(config_name=None):
                 'programs': '/api/v1/programs',
                 'payments': '/api/v1/payments',
                 'uploads': '/api/v1/uploads',
-                'agents': '/api/v1/agents'
+                'agents': '/api/v1/agents',
+                'admin': '/api/v1/admin',
+                'traders': '/api/v1/traders',
+                'kyc': '/api/v1/kyc',
+                'challenges': '/api/v1/challenges',
+                'reports': '/api/v1/reports',
+                'hierarchy': '/api/v1/hierarchy',
+                'crm': '/api/v1/crm'
             }
         }), 200
     
