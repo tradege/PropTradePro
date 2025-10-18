@@ -25,7 +25,7 @@ def create_app(config_name=None):
     init_db(app)
     
     # Enable CORS
-    CORS(app, origins=app.config['CORS_ORIGINS'])
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
     
     # Rate Limiting
     if app.config.get('RATELIMIT_ENABLED'):
