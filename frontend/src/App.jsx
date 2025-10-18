@@ -14,6 +14,13 @@ import ProgramDetails from './pages/ProgramDetails';
 import KYC from './pages/KYC';
 import Profile from './pages/Profile';
 import ChallengeDetails from './pages/ChallengeDetails';
+import AboutUs from './pages/AboutUs';
+import HowItWorks from './pages/HowItWorks';
+import FAQ from './pages/FAQ';
+import Contact from './pages/Contact';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import RiskDisclosure from './pages/RiskDisclosure';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -163,6 +170,17 @@ function App() {
         {/* Public Home Page - Guest Mode */}
         <Route path="/" element={<HomePage />} />
         <Route path="/home" element={<HomePage />} />
+        
+        {/* Public Information Pages */}
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/contact" element={<Contact />} />
+        
+        {/* Legal Pages */}
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/risk-disclosure" element={<RiskDisclosure />} />
 
         {/* 404 */}
         <Route
