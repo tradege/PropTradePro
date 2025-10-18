@@ -103,19 +103,11 @@ function App() {
         />
         <Route
           path="/programs"
-          element={
-            <ProtectedRoute>
-              <Programs />
-            </ProtectedRoute>
-          }
+          element={<Programs />}
         />
         <Route
           path="/programs/:id"
-          element={
-            <ProtectedRoute>
-              <ProgramDetails />
-            </ProtectedRoute>
-          }
+          element={<ProgramDetails />}
         />
         <Route
           path="/kyc"
