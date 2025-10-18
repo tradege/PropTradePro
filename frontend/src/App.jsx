@@ -2,9 +2,12 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import useAuthStore from './store/authStore';
 
-// Auth Components
-import LoginForm from './components/auth/LoginForm';
-import RegisterForm from './components/auth/RegisterForm';
+// Auth Pages
+import Login from './pages/Login';
+import Register from './pages/Register';
+import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 // Pages
 import HomePage from './pages/NewHomePage';
@@ -86,7 +89,7 @@ function App() {
           path="/login"
           element={
             <PublicRoute>
-              <LoginForm />
+              <Login />
             </PublicRoute>
           }
         />
@@ -94,10 +97,13 @@ function App() {
           path="/register"
           element={
             <PublicRoute>
-              <RegisterForm />
+              <Register />
             </PublicRoute>
           }
         />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Protected Routes */}
         <Route
