@@ -43,8 +43,9 @@ def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
     
     # Get database URL from environment or config
-    from src.config import Config
-    database_url = Config.SQLALCHEMY_DATABASE_URI
+    from src.config import get_config
+    config_obj = get_config()
+    database_url = config_obj.SQLALCHEMY_DATABASE_URI
     
     configuration = config.get_section(config.config_ini_section)
     configuration['sqlalchemy.url'] = database_url
