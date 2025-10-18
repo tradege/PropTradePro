@@ -337,7 +337,7 @@ export default function ChallengeDetails() {
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm font-medium text-gray-900">Consistency Rule</p>
-                      <p className="text-sm text-gray-600">No single day > 40% of total profit</p>
+                      <p className="text-sm text-gray-600">No single day &gt; 40% of total profit</p>
                     </div>
                   </div>
                 )}
