@@ -9,7 +9,7 @@ import RegisterForm from './components/auth/RegisterForm';
 // Pages
 import HomePage from './pages/NewHomePage';
 import Dashboard from './pages/Dashboard';
-import Programs from './pages/Programs';
+import Programs from './pages/NewPrograms';
 import ProgramDetails from './pages/ProgramDetails';
 import KYC from './pages/KYC';
 import Profile from './pages/Profile';
