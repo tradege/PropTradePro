@@ -40,7 +40,8 @@ export default function NewHomePage() {
   const filteredPrograms = programs.filter(p => p.type === selectedTab);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-blue-900 to-slate-900">
+    <Layout>
+      <div>
       {/* Navigation */}
       <nav className="fixed top-0 w-full bg-slate-900/80 backdrop-blur-md z-50 border-b border-blue-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

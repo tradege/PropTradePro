@@ -1,9 +1,12 @@
 import React from 'react';
+import Layout from '../components/layout/Layout';
+import React from 'react';
 import { Shield } from 'lucide-react';
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+    <Layout>
+      <div>
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
