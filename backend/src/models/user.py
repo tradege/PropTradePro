@@ -25,6 +25,7 @@ class User(db.Model, TimestampMixin):
     phone = db.Column(db.String(20))
     country_code = db.Column(db.String(2))
     date_of_birth = db.Column(db.Date)
+    avatar_url = db.Column(db.String(500))  # Profile picture URL
     
     # Account Status
     is_active = db.Column(db.Boolean, default=True, nullable=False)
@@ -163,6 +164,7 @@ class User(db.Model, TimestampMixin):
             'kyc_status': self.kyc_status,
             'role': self.role,
             'tenant_id': self.tenant_id,
+            'avatar_url': self.avatar_url,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'last_login_at': self.last_login_at.isoformat() if self.last_login_at else None
         }
@@ -182,7 +184,8 @@ class EmailVerificationToken(db.Model, TimestampMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    token = db.Column(db.String(64), unique=True, nullable=False, index=True)
+    code = db.Column(db.String(6), nullable=False, index=True)  # 6-digit code
+    token = db.Column(db.String(64), unique=True, nullable=False, index=True)  # For URL verification
     expires_at = db.Column(db.DateTime, nullable=False)
     used = db.Column(db.Boolean, default=False, nullable=False)
     
@@ -190,7 +193,8 @@ class EmailVerificationToken(db.Model, TimestampMixin):
     
     def __init__(self, user_id, expires_in_hours=24):
         self.user_id = user_id
-        self.token = secrets.token_urlsafe(32)
+        self.code = ''.join([str(secrets.randbelow(10)) for _ in range(6)])  # Generate 6-digit code
+        self.token = secrets.token_urlsafe(32)  # For URL-based verification
         self.expires_at = datetime.utcnow() + timedelta(hours=expires_in_hours)
     
     def is_valid(self):
@@ -210,16 +214,18 @@ class PasswordResetToken(db.Model, TimestampMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    token = db.Column(db.String(64), unique=True, nullable=False, index=True)
+    code = db.Column(db.String(6), nullable=False, index=True)  # 6-digit code
+    token = db.Column(db.String(64), unique=True, nullable=False, index=True)  # For URL reset
     expires_at = db.Column(db.DateTime, nullable=False)
     used = db.Column(db.Boolean, default=False, nullable=False)
     
     user = db.relationship('User', backref='reset_tokens')
     
-    def __init__(self, user_id, expires_in_hours=1):
+    def __init__(self, user_id, expires_in_minutes=15):
         self.user_id = user_id
-        self.token = secrets.token_urlsafe(32)
-        self.expires_at = datetime.utcnow() + timedelta(hours=expires_in_hours)
+        self.code = ''.join([str(secrets.randbelow(10)) for _ in range(6)])  # Generate 6-digit code
+        self.token = secrets.token_urlsafe(32)  # For URL-based reset
+        self.expires_at = datetime.utcnow() + timedelta(minutes=expires_in_minutes)
     
     def is_valid(self):
         """Check if token is valid"""

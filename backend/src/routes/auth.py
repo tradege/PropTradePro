@@ -51,13 +51,13 @@ def register():
             referral_code=data.get('referral_code')  # Support referral code
         )
         
-        # Send verification email
-        EmailService.send_verification_email(user, verification_token.token)
+        # Send verification email with code
+        EmailService.send_verification_email(user, verification_token.code)
         
         return jsonify({
-            'message': 'User registered successfully',
+            'message': 'User registered successfully. Please check your email for verification code.',
             'user': user.to_dict(),
-            'verification_token': verification_token.token  # Remove in production
+            'verification_code': verification_token.code  # Remove in production
         }), 201
         
     except ValueError as e:
@@ -187,7 +187,7 @@ def refresh_token():
 
 @auth_bp.route('/verify-email/<token>', methods=['GET'])
 def verify_email(token):
-    """Verify email with token"""
+    """Verify email with token (URL-based)"""
     try:
         user = AuthService.verify_email(token)
         
@@ -205,6 +205,64 @@ def verify_email(token):
         return jsonify({'error': 'Email verification failed'}), 500
 
 
+@auth_bp.route('/verify-email', methods=['POST'])
+def verify_email_with_code():
+    """Verify email with 6-digit code"""
+    data = request.get_json()
+    
+    # Validate required fields
+    valid, message = validate_required_fields(data, ['email', 'code'])
+    if not valid:
+        return jsonify({'error': message}), 400
+    
+    # Validate code format (6 digits)
+    if not data['code'].isdigit() or len(data['code']) != 6:
+        return jsonify({'error': 'Code must be 6 digits'}), 400
+    
+    try:
+        user = AuthService.verify_email_with_code(data['email'], data['code'])
+        
+        # Send welcome email
+        EmailService.send_welcome_email(user)
+        
+        return jsonify({
+            'message': 'Email verified successfully',
+            'user': user.to_dict()
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': 'Email verification failed'}), 500
+
+
+@auth_bp.route('/resend-verification', methods=['POST'])
+def resend_verification():
+    """Resend verification code"""
+    data = request.get_json()
+    
+    if 'email' not in data:
+        return jsonify({'error': 'Email is required'}), 400
+    
+    try:
+        verification_token = AuthService.resend_verification_code(data['email'])
+        
+        if verification_token:
+            # Send verification email with new code
+            EmailService.send_verification_email(verification_token.user, verification_token.code)
+        
+        # Always return success (don't reveal if email exists)
+        return jsonify({
+            'message': 'If the email exists and is not verified, a new verification code has been sent',
+            'code': verification_token.code if verification_token else None  # Remove in production
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': 'Failed to resend verification code'}), 500
+
+
 @auth_bp.route('/password/reset-request', methods=['POST'])
 def request_password_reset():
     """Request password reset"""
@@ -216,14 +274,14 @@ def request_password_reset():
     try:
         reset_token = AuthService.request_password_reset(data['email'])
         
-        # Send password reset email
+        # Send password reset email with code
         if reset_token:
-            EmailService.send_password_reset_email(reset_token.user, reset_token.token)
+            EmailService.send_password_reset_email(reset_token.user, reset_token.code)
         
         # Always return success (don't reveal if email exists)
         return jsonify({
-            'message': 'If the email exists, a password reset link has been sent',
-            'reset_token': reset_token.token if reset_token else None  # Remove in production
+            'message': 'If the email exists, a password reset code has been sent',
+            'reset_code': reset_token.code if reset_token else None  # Remove in production
         }), 200
         
     except Exception as e:
@@ -232,7 +290,7 @@ def request_password_reset():
 
 @auth_bp.route('/password/reset', methods=['POST'])
 def reset_password():
-    """Reset password with token"""
+    """Reset password with token (URL-based)"""
     data = request.get_json()
     
     # Validate required fields
@@ -247,6 +305,71 @@ def reset_password():
     
     try:
         user = AuthService.reset_password(data['token'], data['new_password'])
+        
+        return jsonify({
+            'message': 'Password reset successfully',
+            'user': user.to_dict()
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': 'Password reset failed'}), 500
+
+
+@auth_bp.route('/password/verify-code', methods=['POST'])
+def verify_reset_code():
+    """Verify password reset code"""
+    data = request.get_json()
+    
+    # Validate required fields
+    valid, message = validate_required_fields(data, ['email', 'code'])
+    if not valid:
+        return jsonify({'error': message}), 400
+    
+    # Validate code format (6 digits)
+    if not data['code'].isdigit() or len(data['code']) != 6:
+        return jsonify({'error': 'Code must be 6 digits'}), 400
+    
+    try:
+        token = AuthService.verify_reset_code(data['email'], data['code'])
+        
+        return jsonify({
+            'message': 'Reset code verified successfully',
+            'valid': True
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': 'Code verification failed'}), 500
+
+
+@auth_bp.route('/password/reset-with-code', methods=['POST'])
+def reset_password_with_code():
+    """Reset password with 6-digit code"""
+    data = request.get_json()
+    
+    # Validate required fields
+    valid, message = validate_required_fields(data, ['email', 'code', 'new_password'])
+    if not valid:
+        return jsonify({'error': message}), 400
+    
+    # Validate code format (6 digits)
+    if not data['code'].isdigit() or len(data['code']) != 6:
+        return jsonify({'error': 'Code must be 6 digits'}), 400
+    
+    # Validate password
+    valid, message = validate_password_strength(data['new_password'])
+    if not valid:
+        return jsonify({'error': message}), 400
+    
+    try:
+        user = AuthService.reset_password_with_code(
+            data['email'],
+            data['code'],
+            data['new_password']
+        )
         
         return jsonify({
             'message': 'Password reset successfully',

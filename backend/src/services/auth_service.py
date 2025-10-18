@@ -130,7 +130,7 @@ class AuthService:
     
     @staticmethod
     def verify_email(token_string):
-        """Verify email with token"""
+        """Verify email with token (URL-based)"""
         token = EmailVerificationToken.query.filter_by(token=token_string).first()
         
         if not token or not token.is_valid():
@@ -144,6 +144,63 @@ class AuthService:
         db.session.commit()
         
         return user
+    
+    @staticmethod
+    def verify_email_with_code(email, code):
+        """Verify email with 6-digit code"""
+        user = User.query.filter_by(email=email).first()
+        
+        if not user:
+            raise ValueError('User not found')
+        
+        # Find valid verification token with matching code
+        token = EmailVerificationToken.query.filter_by(
+            user_id=user.id,
+            code=code,
+            used=False
+        ).order_by(EmailVerificationToken.created_at.desc()).first()
+        
+        if not token or not token.is_valid():
+            raise ValueError('Invalid or expired verification code')
+        
+        user.is_verified = True
+        user.email_verified_at = datetime.utcnow()
+        token.mark_as_used()
+        
+        db.session.commit()
+        
+        return user
+    
+    @staticmethod
+    def resend_verification_code(email):
+        """Resend verification code to email"""
+        user = User.query.filter_by(email=email).first()
+        
+        if not user:
+            # Don't reveal if email exists
+            return None
+        
+        if user.is_verified:
+            raise ValueError('Email is already verified')
+        
+        # Check if there's a recent unused token (within last 2 minutes)
+        recent_token = EmailVerificationToken.query.filter_by(
+            user_id=user.id,
+            used=False
+        ).filter(
+            EmailVerificationToken.created_at > datetime.utcnow() - timedelta(minutes=2)
+        ).first()
+        
+        if recent_token:
+            # Return existing token instead of creating new one
+            return recent_token
+        
+        # Create new verification token
+        verification_token = EmailVerificationToken(user.id)
+        db.session.add(verification_token)
+        db.session.commit()
+        
+        return verification_token
     
     @staticmethod
     def request_password_reset(email):
@@ -163,13 +220,58 @@ class AuthService:
     
     @staticmethod
     def reset_password(token_string, new_password):
-        """Reset password with token"""
+        """Reset password with token (URL-based)"""
         token = PasswordResetToken.query.filter_by(token=token_string).first()
         
         if not token or not token.is_valid():
             raise ValueError('Invalid or expired token')
         
         user = token.user
+        user.set_password(new_password)
+        token.mark_as_used()
+        
+        db.session.commit()
+        
+        return user
+    
+    @staticmethod
+    def verify_reset_code(email, code):
+        """Verify password reset code"""
+        user = User.query.filter_by(email=email).first()
+        
+        if not user:
+            raise ValueError('User not found')
+        
+        # Find valid reset token with matching code
+        token = PasswordResetToken.query.filter_by(
+            user_id=user.id,
+            code=code,
+            used=False
+        ).order_by(PasswordResetToken.created_at.desc()).first()
+        
+        if not token or not token.is_valid():
+            raise ValueError('Invalid or expired reset code')
+        
+        return token
+    
+    @staticmethod
+    def reset_password_with_code(email, code, new_password):
+        """Reset password with 6-digit code"""
+        user = User.query.filter_by(email=email).first()
+        
+        if not user:
+            raise ValueError('User not found')
+        
+        # Find valid reset token with matching code
+        token = PasswordResetToken.query.filter_by(
+            user_id=user.id,
+            code=code,
+            used=False
+        ).order_by(PasswordResetToken.created_at.desc()).first()
+        
+        if not token or not token.is_valid():
+            raise ValueError('Invalid or expired reset code')
+        
         user.set_password(new_password)
         token.mark_as_used()
         

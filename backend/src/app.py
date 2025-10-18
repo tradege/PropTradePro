@@ -45,12 +45,14 @@ def create_app(config_name=None):
     
     # Register blueprints
     from src.routes.auth import auth_bp
+    from src.routes.profile import profile_bp
     from src.routes.programs import programs_bp
     from src.routes.payments import payments_bp
     from src.routes.uploads import uploads_bp
     from src.routes.agents import agents_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/v1/auth')
+    app.register_blueprint(profile_bp, url_prefix='/api/v1/profile')
     app.register_blueprint(programs_bp, url_prefix='/api/v1/programs')
     app.register_blueprint(payments_bp, url_prefix='/api/v1/payments')
     app.register_blueprint(uploads_bp, url_prefix='/api/v1/uploads')
@@ -74,6 +76,7 @@ def create_app(config_name=None):
             'endpoints': {
                 'health': '/health',
                 'auth': '/api/v1/auth',
+                'profile': '/api/v1/profile',
                 'programs': '/api/v1/programs',
                 'payments': '/api/v1/payments',
                 'uploads': '/api/v1/uploads',
