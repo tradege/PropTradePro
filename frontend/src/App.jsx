@@ -7,7 +7,7 @@ import LoginForm from './components/auth/LoginForm';
 import RegisterForm from './components/auth/RegisterForm';
 
 // Pages
-import HomePage from './pages/HomePage';
+import HomePage from './pages/NewHomePage';
 import Dashboard from './pages/Dashboard';
 import Programs from './pages/Programs';
 import ProgramDetails from './pages/ProgramDetails';
