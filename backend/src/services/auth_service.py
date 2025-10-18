@@ -12,8 +12,11 @@ class AuthService:
     """Authentication service"""
     
     @staticmethod
-    def register_user(email, password, first_name, last_name, **kwargs):
+    def register_user(email, password, first_name, last_name, referral_code=None, **kwargs):
         """Register a new user"""
+        from src.models import Agent, Referral
+        from flask import request
+        
         # Check if user already exists
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
@@ -30,6 +33,25 @@ class AuthService:
         
         db.session.add(user)
         db.session.commit()
+        
+        # Handle referral code if provided
+        if referral_code:
+            agent = Agent.query.filter_by(agent_code=referral_code, is_active=True).first()
+            if agent:
+                # Create referral record
+                referral = Referral(
+                    agent_id=agent.id,
+                    referred_user_id=user.id,
+                    referral_code=referral_code,
+                    ip_address=request.remote_addr if request else None,
+                    user_agent=request.headers.get('User-Agent') if request else None,
+                    status='pending'
+                )
+                db.session.add(referral)
+                
+                # Update agent stats
+                agent.referral_count += 1
+                db.session.commit()
         
         # Generate email verification token
         verification_token = EmailVerificationToken(user.id)

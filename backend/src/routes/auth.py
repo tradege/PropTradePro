@@ -47,7 +47,8 @@ def register():
             last_name=data['last_name'],
             phone=data.get('phone'),
             country_code=data.get('country_code'),
-            tenant_id=data.get('tenant_id')
+            tenant_id=data.get('tenant_id'),
+            referral_code=data.get('referral_code')  # Support referral code
         )
         
         # Send verification email
