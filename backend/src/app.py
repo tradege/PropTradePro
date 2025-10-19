@@ -26,7 +26,11 @@ def create_app(config_name=None):
     init_db(app)
     
     # Enable CORS
-    cors_origins = app.config.get('CORS_ORIGINS', '*').split(',')
+    cors_origins = app.config.get('CORS_ORIGINS', '*')
+    if isinstance(cors_origins, str):
+        cors_origins = cors_origins.split(',')
+    elif not isinstance(cors_origins, list):
+        cors_origins = ['*']
     CORS(app, 
          resources={r"/api/*": {
              "origins": cors_origins,
