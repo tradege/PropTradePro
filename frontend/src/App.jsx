@@ -29,8 +29,8 @@ import Profile from './pages/Profile';
 import ChallengeDetails from './pages/ChallengeDetails';
 
 // Admin Pages
-import AdminLayout from './components/admin/AdminLayout';
-import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminLayout from './components/mui/AdminLayout';
+import AdminDashboard from './pages/admin/AdminDashboard_mui';
 import UserManagement from './pages/admin/UserManagement';
 import KYCApproval from './pages/admin/KYCApproval';
 import ProgramsManagement from './pages/admin/ProgramsManagement';
