@@ -8,6 +8,8 @@ from src.models.agent import Agent
 from src.models.referral import Referral
 from src.models.commission import Commission
 from src.models.withdrawal import Withdrawal
+from src.models.trade import Trade
+from src.models.payment import Payment
 
 __all__ = [
     'User',
@@ -20,6 +22,8 @@ __all__ = [
     'Agent',
     'Referral',
     'Commission',
-    'Withdrawal'
+    'Withdrawal',
+    'Trade',
+    'Payment'
 ]
 
