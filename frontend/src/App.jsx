@@ -26,7 +26,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import RiskDisclosure from './pages/RiskDisclosure';
 
 // Shared Pages
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard_mui';
 import KYC from './pages/KYC';
 import Profile from './pages/user/Profile_mui';
 import ChallengeDetails from './pages/ChallengeDetails';
