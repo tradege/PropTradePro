@@ -1,26 +1,6 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:15-alpine
-    container_name: proptradepro-postgres
-    environment:
-      POSTGRES_DB: proptradepro_dev
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - proptradepro-network
-
   # Redis Cache
   redis:
     image: redis:7-alpine
@@ -46,7 +26,7 @@ services:
     environment:
       FLASK_ENV: development
       FLASK_APP: src.app:create_app
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/proptradepro_dev
+      DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY: dev-secret-key-change-in-production
       JWT_SECRET_KEY: dev-jwt-secret-key-change-in-production
@@ -57,8 +37,6 @@ services:
       - ./backend:/app
       - /app/__pycache__
     depends_on:
-      postgres:
-        condition: service_healthy
       redis:
         condition: service_healthy
     networks:
@@ -92,7 +70,6 @@ services:
       - VITE_API_URL=http://localhost:5000
 
 volumes:
-  postgres_data:
   redis_data:
 
 networks:
