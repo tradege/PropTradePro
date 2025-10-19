@@ -72,7 +72,10 @@ class AuthService:
             raise ValueError('Account is deactivated')
         
         # Update last login
-        user.update_last_login(ip_address)
+        user.last_login_at = datetime.utcnow()
+        if ip_address:
+            user.last_login_ip = ip_address
+        db.session.commit()
         
         return user
     
