@@ -39,7 +39,7 @@ export default function UserManagement() {
   const loadUsers = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get('/users');
+      const response = await api.get('/admin/users');
       setUsers(response.data.users || response.data || []);
     } catch (error) {
       console.error('Failed to load users:', error);
@@ -53,7 +53,7 @@ export default function UserManagement() {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/users', newUser);
+      const response = await api.post('/admin/users', newUser);
       setUsers([...users, response.data]);
       setIsCreateModalOpen(false);
       setNewUser({
