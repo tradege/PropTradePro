@@ -159,24 +159,24 @@ export default function ProgramsManagement() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="text-gray-600 mt-4">Loading programs...</p>
+          <p className="text-gray-400 mt-4">Loading programs...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-gray-800 border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Programs Management</h1>
-              <p className="text-gray-600 mt-2">Create and manage trading programs</p>
+              <h1 className="text-3xl font-bold text-white">Programs Management</h1>
+              <p className="text-gray-400 mt-2">Create and manage trading programs</p>
             </div>
             <button
               onClick={() => {
@@ -194,7 +194,7 @@ export default function ProgramsManagement() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+        <div className="bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -233,13 +233,13 @@ export default function ProgramsManagement() {
               <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
                 <button
                   onClick={(e) => { e.stopPropagation(); handleEdit(program); }}
-                  className="p-2 bg-white text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg shadow-md transition-colors"
+                  className="p-2 bg-gray-800 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg shadow-md transition-colors"
                 >
                   <Edit className="w-4 h-4" />
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); handleDelete(program.id); }}
-                  className="p-2 bg-white text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg shadow-md transition-colors"
+                  className="p-2 bg-gray-800 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg shadow-md transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -250,7 +250,7 @@ export default function ProgramsManagement() {
 
         {filteredPrograms.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-600">No programs found</p>
+            <p className="text-gray-400">No programs found</p>
           </div>
         )}
       </div>
@@ -258,9 +258,9 @@ export default function ProgramsManagement() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900">
+          <div className="bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-700">
+              <h2 className="text-2xl font-bold text-white">
                 {editingProgram ? 'Edit Program' : 'Add New Program'}
               </h2>
             </div>
