@@ -6,6 +6,7 @@ import {
   TrendingUp, User
 } from 'lucide-react';
 import api from '../../services/api';
+import RoleBadge, { RoleIcon, RoleHierarchy } from '../../components/ui/RoleBadge';
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
@@ -243,11 +244,7 @@ export default function UserManagement() {
                       <tr key={user.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className={`w-10 h-10 bg-${roleColor}-100 rounded-full flex items-center justify-center`}>
-                              <span className={`text-${roleColor}-600 font-medium`}>
-                                {user.first_name?.[0]}{user.last_name?.[0]}
-                              </span>
-                            </div>
+                            <RoleIcon role={user.role} size="md" />
                             <div className="ml-4">
                               <div className="text-sm font-medium text-gray-900">
                                 {user.first_name} {user.last_name}
@@ -257,11 +254,9 @@ export default function UserManagement() {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center gap-2">
-                            <RoleIcon className={`w-4 h-4 text-${roleColor}-600`} />
-                            <span className={`px-2 py-1 text-xs font-semibold rounded-full bg-${roleColor}-100 text-${roleColor}-800`}>
-                              {roles.find(r => r.value === user.role)?.label || user.role}
-                            </span>
+                          <RoleBadge role={user.role} size="md" />
+                          <div className="mt-2">
+                            <RoleHierarchy currentRole={user.role} />
                           </div>
                           <div className="text-xs text-gray-500 mt-1">
                             Level {user.level || 0}

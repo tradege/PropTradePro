@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Eye, Search, Filter } from 'lucide-react';
 import api from '../../services/api';
+import ProgramBadge, { ProgramCard } from '../../components/ui/ProgramBadge';
 
 export default function ProgramsManagement() {
   const [programs, setPrograms] = useState([]);
@@ -224,69 +225,24 @@ export default function ProgramsManagement() {
         {/* Programs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPrograms.map((program) => (
-            <div key={program.id} className="card">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">{program.name}</h3>
-                  <span className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                    {program.type.replace('_', ' ').toUpperCase()}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleEdit(program)}
-                    className="p-2 text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(program.id)}
-                    className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Account Size</span>
-                  <span className="font-semibold text-gray-900">
-                    ${program.account_size.toLocaleString()}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Price</span>
-                  <span className="font-semibold text-gray-900">${program.price}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Profit Split</span>
-                  <span className="font-semibold text-gray-900">{program.profit_split}%</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Max Daily Loss</span>
-                  <span className="font-semibold text-gray-900">{program.max_daily_loss}%</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Enrollments</span>
-                  <span className="font-semibold text-gray-900">{program.enrollments || 0}</span>
-                </div>
-              </div>
-
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <div className="flex items-center justify-between">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    program.is_active
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
-                  }`}>
-                    {program.is_active ? 'Active' : 'Inactive'}
-                  </span>
-                  <button className="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center gap-1">
-                    <Eye className="w-4 h-4" />
-                    View Details
-                  </button>
-                </div>
+            <div key={program.id} className="relative">
+              <ProgramCard 
+                program={program} 
+                onClick={() => {/* View details */}}
+              />
+              <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleEdit(program); }}
+                  className="p-2 bg-white text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg shadow-md transition-colors"
+                >
+                  <Edit className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleDelete(program.id); }}
+                  className="p-2 bg-white text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg shadow-md transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
           ))}
