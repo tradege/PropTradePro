@@ -30,7 +30,7 @@ class Payment(db.Model):
     completed_at = db.Column(db.DateTime)
     
     # Relationships
-    challenges = db.relationship('Challenge', backref='payment', lazy='dynamic')
+    # Note: payment_id in Challenge is a string (Stripe payment intent ID), not a foreign key
     
     def to_dict(self):
         return {
