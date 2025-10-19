@@ -19,7 +19,8 @@ def create_app(config_name=None):
         from src.config import config
         app.config.from_object(config[config_name])
     else:
-        app.config.from_object(get_config())
+        config_class = get_config()
+        app.config.from_object(config_class)
     
     # Initialize extensions
     init_db(app)
