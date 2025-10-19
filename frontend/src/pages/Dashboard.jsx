@@ -11,12 +11,15 @@ import {
   AlertCircle,
   CheckCircle,
   Clock,
+  Shield,
 } from 'lucide-react';
 
 export default function Dashboard() {
   const { user } = useAuthStore();
   const [challenges, setChallenges] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const isAdmin = user && (user.role === 'super_admin' || user.role === 'admin');
 
   useEffect(() => {
     loadChallenges();
@@ -71,10 +74,21 @@ export default function Dashboard() {
               </h1>
               <p className="text-gray-600 mt-1">Here's your trading overview</p>
             </div>
-            <Link to="/programs" className="btn btn-primary">
-              Browse Programs
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+            <div className="flex items-center gap-3">
+              {isAdmin && (
+                <Link 
+                  to="/admin" 
+                  className="btn btn-outline inline-flex items-center gap-2"
+                >
+                  <Shield className="w-4 h-4" />
+                  Admin Panel
+                </Link>
+              )}
+              <Link to="/programs" className="btn btn-primary">
+                Browse Programs
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -100,9 +114,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Total Profit</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">
-                  ${challenges.reduce((sum, c) => sum + (c.total_profit || 0), 0).toLocaleString()}
-                </p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">$0</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <DollarSign className="w-6 h-6 text-green-600" />
@@ -114,14 +126,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Success Rate</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">
-                  {challenges.length > 0
-                    ? Math.round(
-                        (challenges.filter((c) => c.status === 'passed').length / challenges.length) * 100
-                      )
-                    : 0}
-                  %
-                </p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">0%</p>
               </div>
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                 <Target className="w-6 h-6 text-purple-600" />
