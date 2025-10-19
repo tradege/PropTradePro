@@ -14,6 +14,9 @@ import ResetPassword from './pages/ResetPassword';
 import HomePage from './pages/NewHomePage';
 import Programs from './pages/Programs_mui';
 import ProgramDetails from './pages/ProgramDetails';
+import OnePhaseChallenge from './pages/OnePhaseChallenge';
+import TwoPhaseChallenge from './pages/TwoPhaseChallenge';
+import InstantFunding from './pages/InstantFunding';
 import AboutUs from './pages/AboutUs';
 import HowItWorks from './pages/HowItWorks';
 import FAQ from './pages/FAQ';
@@ -111,6 +114,9 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/programs" element={<Programs />} />
+        <Route path="/programs/one-phase" element={<OnePhaseChallenge />} />
+        <Route path="/programs/two-phase" element={<TwoPhaseChallenge />} />
+        <Route path="/programs/instant-funding" element={<InstantFunding />} />
         <Route path="/programs/:id" element={<ProgramDetails />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
