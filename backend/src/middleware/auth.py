@@ -65,7 +65,7 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
         current_user = get_current_user()
         
-        if not current_user or current_user.role != 'admin':
+        if not current_user or current_user.role not in ['admin', 'super_admin']:
             return jsonify({'error': 'Admin access required'}), 403
         
         return f(*args, **kwargs)
