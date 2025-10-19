@@ -110,7 +110,12 @@ def login():
     except ValueError as e:
         return jsonify({'error': str(e)}), 401
     except Exception as e:
-        return jsonify({'error': 'Login failed'}), 500
+        import traceback
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f'Login error: {str(e)}')
+        logger.error(traceback.format_exc())
+        return jsonify({'error': f'Login failed: {str(e)}'}), 500
 
 
 @auth_bp.route('/login/2fa', methods=['POST'])
