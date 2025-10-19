@@ -31,10 +31,11 @@ import ChallengeDetails from './pages/ChallengeDetails';
 // Admin Pages
 import AdminLayout from './components/mui/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard_mui';
-import UserManagement from './pages/admin/UserManagement';
-import KYCApproval from './pages/admin/KYCApproval';
-import ProgramsManagement from './pages/admin/ProgramsManagement';
-import PaymentsManagement from './pages/admin/PaymentsManagement';
+import UserManagement from './pages/admin/UserManagement_mui';
+import ProgramsManagement from './pages/admin/ProgramsManagement_mui';
+import PaymentsManagement from './pages/admin/PaymentsManagement_mui';
+import KYCApproval from './pages/admin/KYCApproval_mui';
+import Settings from './pages/admin/Settings_mui';
 import Settings from './pages/admin/Settings';
 
 // Agent Pages
@@ -44,7 +45,7 @@ import Commissions from './pages/agent/Commissions';
 import Reports from './pages/agent/Reports';
 
 // Trader Pages
-import TraderDashboard from './pages/trader/TraderDashboard';
+import TraderDashboard from './pages/user/UserDashboard_mui';
 import TradingHistory from './pages/trader/TradingHistory';
 import Withdrawals from './pages/trader/Withdrawals';
 import Documents from './pages/trader/Documents';
