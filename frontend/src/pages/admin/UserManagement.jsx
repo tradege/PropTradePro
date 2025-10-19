@@ -40,26 +40,11 @@ export default function UserManagement() {
     try {
       setIsLoading(true);
       const response = await api.get('/users');
-      setUsers(response.data);
+      setUsers(response.data.users || response.data || []);
     } catch (error) {
       console.error('Failed to load users:', error);
-      // Fallback to mock data if API fails
-      setUsers([
-        {
-          id: 1,
-          first_name: 'Admin',
-          last_name: 'User',
-          email: 'admin@proptradepro.com',
-          phone: '+1 234 567 8900',
-          is_active: true,
-          kyc_status: 'approved',
-          role: 'super_admin',
-          created_at: '2025-01-15T00:00:00Z',
-          last_login_at: new Date().toISOString(),
-          parent_id: null,
-          level: 0
-        }
-      ]);
+      alert('Failed to load users. Please check your connection and try again.');
+      setUsers([]);
     } finally {
       setIsLoading(false);
     }

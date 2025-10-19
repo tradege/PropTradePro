@@ -136,12 +136,14 @@ def get_users():
                 'first_name': user.first_name,
                 'last_name': user.last_name,
                 'role': user.role,
-                'status': user.status,
+                'is_active': user.is_active,
                 'kyc_status': user.kyc_status,
                 'phone': user.phone,
                 'country_code': user.country_code,
-                'created_at': user.created_at.isoformat(),
-                'last_login': user.last_login.isoformat() if user.last_login else None
+                'parent_id': user.parent_id,
+                'level': user.level,
+                'created_at': user.created_at.isoformat() if user.created_at else None,
+                'last_login_at': user.last_login_at.isoformat() if user.last_login_at else None
             } for user in pagination.items],
             'pagination': {
                 'page': pagination.page,

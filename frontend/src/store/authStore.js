@@ -1,11 +1,37 @@
 import { create } from 'zustand';
 import { authAPI } from '../services/api';
 
-const useAuthStore = create((set) => ({
+const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
+
+const useAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
   isLoading: true,
   error: null,
+  lastActivity: Date.now(),
+  inactivityTimer: null,
+
+  // Update last activity timestamp
+  updateActivity: () => {
+    const state = get();
+    set({ lastActivity: Date.now() });
+    
+    // Clear existing timer
+    if (state.inactivityTimer) {
+      clearTimeout(state.inactivityTimer);
+    }
+    
+    // Set new timer
+    const timer = setTimeout(() => {
+      const { isAuthenticated, logout } = get();
+      if (isAuthenticated) {
+        console.log('User inactive for 15 minutes, logging out...');
+        logout();
+      }
+    }, INACTIVITY_TIMEOUT);
+    
+    set({ inactivityTimer: timer });
+  },
 
   // Initialize auth state from localStorage
   init: async () => {
@@ -17,6 +43,15 @@ const useAuthStore = create((set) => ({
           user: response.data.user,
           isAuthenticated: true,
           isLoading: false,
+        });
+        
+        // Start inactivity tracking
+        get().updateActivity();
+        
+        // Track user activity
+        const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
+        events.forEach(event => {
+          document.addEventListener(event, get().updateActivity);
         });
       } catch (error) {
         localStorage.removeItem('access_token');
@@ -47,6 +82,15 @@ const useAuthStore = create((set) => ({
         user: response.data.user,
         isAuthenticated: true,
       });
+      
+      // Start inactivity tracking
+      get().updateActivity();
+      
+      // Track user activity
+      const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
+      events.forEach(event => {
+        document.addEventListener(event, get().updateActivity);
+      });
 
       return { success: true };
     } catch (error) {
@@ -68,6 +112,15 @@ const useAuthStore = create((set) => ({
       set({
         user: response.data.user,
         isAuthenticated: true,
+      });
+      
+      // Start inactivity tracking
+      get().updateActivity();
+      
+      // Track user activity
+      const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
+      events.forEach(event => {
+        document.addEventListener(event, get().updateActivity);
       });
 
       return { success: true };
@@ -98,11 +151,24 @@ const useAuthStore = create((set) => ({
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
+      // Clear inactivity timer
+      const state = get();
+      if (state.inactivityTimer) {
+        clearTimeout(state.inactivityTimer);
+      }
+      
+      // Remove event listeners
+      const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
+      events.forEach(event => {
+        document.removeEventListener(event, get().updateActivity);
+      });
+      
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       set({
         user: null,
         isAuthenticated: false,
+        inactivityTimer: null,
       });
     }
   },
