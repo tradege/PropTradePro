@@ -120,6 +120,7 @@ config = {
 
 def get_config():
     """Get configuration based on environment"""
-    env = os.getenv('FLASK_ENV', 'development')
-    return config.get(env, config['default'])
+    env = os.getenv('FLASK_ENV', 'production')  # Default to production
+    config_class = config.get(env, config['production'])
+    return config_class
 
