@@ -33,7 +33,7 @@ class Lead(db.Model, TimestampMixin):
     assigned_at = db.Column(db.DateTime)
     
     # Interest
-    interested_program_id = db.Column(db.Integer, db.ForeignKey('programs.id'))
+    interested_program_id = db.Column(db.Integer, db.ForeignKey('trading_programs.id'))
     budget = db.Column(db.Numeric(10, 2))  # Expected budget
     
     # Conversion
@@ -59,7 +59,7 @@ class Lead(db.Model, TimestampMixin):
     # Relationships
     assigned_user = db.relationship('User', foreign_keys=[assigned_to], backref='assigned_leads')
     converted_user = db.relationship('User', foreign_keys=[converted_to_user_id], backref='converted_from_lead')
-    interested_program = db.relationship('Program', backref='interested_leads')
+    interested_program = db.relationship('TradingProgram', backref='interested_leads')
     activities = db.relationship('LeadActivity', back_populates='lead', lazy='dynamic', cascade='all, delete-orphan')
     
     def __repr__(self):
