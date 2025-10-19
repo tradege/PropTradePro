@@ -4,9 +4,9 @@ Admin routes for system management
 from flask import Blueprint, request, jsonify, g
 from src.database import db
 from src.models.user import User
-from src.models.challenge import Challenge
+from src.models.trading_program import Challenge
 from src.models.payment import Payment
-from src.models.program import Program
+from src.models.trading_program import TradingProgram as Program
 from src.utils.decorators import token_required, admin_required
 from src.utils.validators import validate_required_fields, validate_email_format
 from datetime import datetime, timedelta

@@ -4,7 +4,7 @@ Trader routes for trading operations and account management
 from flask import Blueprint, request, jsonify, g
 from src.database import db
 from src.models.user import User
-from src.models.challenge import Challenge
+from src.models.trading_program import Challenge
 from src.models.trade import Trade
 from src.models.withdrawal import Withdrawal
 from src.utils.decorators import token_required

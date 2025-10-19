@@ -3,8 +3,8 @@ Challenge routes for managing trading challenges
 """
 from flask import Blueprint, request, jsonify, g
 from src.database import db
-from src.models.challenge import Challenge
-from src.models.program import Program
+from src.models.trading_program import Challenge
+from src.models.trading_program import TradingProgram as Program
 from src.models.trade import Trade
 from src.models.payment import Payment
 from src.utils.decorators import token_required, admin_required

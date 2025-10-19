@@ -175,7 +175,7 @@ class PermissionManager:
     @staticmethod
     def filter_challenges_by_permission(user, query):
         """Filter challenges query based on user permissions"""
-        from src.models.challenge import Challenge
+        from src.models.trading_program import Challenge
         
         # Admin sees all
         if user.role == 'admin':
