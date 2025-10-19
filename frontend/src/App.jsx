@@ -29,6 +29,7 @@ import Profile from './pages/Profile';
 import ChallengeDetails from './pages/ChallengeDetails';
 
 // Admin Pages
+import AdminLayout from './components/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import UserManagement from './pages/admin/UserManagement';
 import KYCApproval from './pages/admin/KYCApproval';
@@ -180,7 +181,9 @@ function App() {
           element={
             <ProtectedRoute>
               <RoleGuard allowedRoles={['super_admin', 'admin']}>
-                <AdminDashboard />
+                <AdminLayout>
+                  <AdminDashboard />
+                </AdminLayout>
               </RoleGuard>
             </ProtectedRoute>
           }
@@ -190,7 +193,9 @@ function App() {
           element={
             <ProtectedRoute>
               <RoleGuard allowedRoles={['super_admin', 'admin']}>
-                <UserManagement />
+                <AdminLayout>
+                  <UserManagement />
+                </AdminLayout>
               </RoleGuard>
             </ProtectedRoute>
           }
@@ -200,7 +205,9 @@ function App() {
           element={
             <ProtectedRoute>
               <RoleGuard allowedRoles={['super_admin', 'admin']}>
-                <ProgramsManagement />
+                <AdminLayout>
+                  <ProgramsManagement />
+                </AdminLayout>
               </RoleGuard>
             </ProtectedRoute>
           }
@@ -210,7 +217,9 @@ function App() {
           element={
             <ProtectedRoute>
               <RoleGuard allowedRoles={['super_admin', 'admin']}>
-                <PaymentsManagement />
+                <AdminLayout>
+                  <PaymentsManagement />
+                </AdminLayout>
               </RoleGuard>
             </ProtectedRoute>
           }
@@ -220,7 +229,9 @@ function App() {
           element={
             <ProtectedRoute>
               <RoleGuard allowedRoles={['super_admin', 'admin']}>
-                <KYCApproval />
+                <AdminLayout>
+                  <KYCApproval />
+                </AdminLayout>
               </RoleGuard>
             </ProtectedRoute>
           }
@@ -230,7 +241,9 @@ function App() {
           element={
             <ProtectedRoute>
               <RoleGuard allowedRoles={['super_admin', 'admin']}>
-                <Settings />
+                <AdminLayout>
+                  <Settings />
+                </AdminLayout>
               </RoleGuard>
             </ProtectedRoute>
           }
