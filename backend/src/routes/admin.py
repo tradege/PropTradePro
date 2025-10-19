@@ -114,7 +114,10 @@ def get_users():
         if role:
             query = query.filter_by(role=role)
         if status:
-            query = query.filter_by(status=status)
+            if status == 'active':
+                query = query.filter_by(is_active=True)
+            elif status == 'inactive':
+                query = query.filter_by(is_active=False)
         if search:
             query = query.filter(
                 or_(
