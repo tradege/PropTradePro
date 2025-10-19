@@ -23,7 +23,7 @@ import {
   Cancel,
 } from '@mui/icons-material';
 import UserLayout from '../../components/mui/UserLayout';
-import { useAuthStore } from '../../store/authStore';
+import useAuthStore from '../../store/authStore';
 
 export default function Profile() {
   const { user } = useAuthStore();
