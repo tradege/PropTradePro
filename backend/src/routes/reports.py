@@ -39,7 +39,7 @@ def get_agent_dashboard():
         active_traders = User.query.filter(
             and_(
                 User.id.in_(trader_ids),
-                User.status == 'active'
+                User.is_active == True
             )
         ).count()
         
@@ -127,7 +127,7 @@ def get_agent_dashboard():
                 'id': trader.id,
                 'name': f"{trader.first_name} {trader.last_name}",
                 'email': trader.email,
-                'status': trader.status,
+                'is_active': trader.is_active,
                 'created_at': trader.created_at.isoformat()
             } for trader in recent_traders],
             'recent_commissions': [{
@@ -207,7 +207,7 @@ def get_agent_traders():
                 'id': trader.id,
                 'name': f"{trader.first_name} {trader.last_name}",
                 'email': trader.email,
-                'status': trader.status,
+                'is_active': trader.is_active,
                 'created_at': trader.created_at.isoformat(),
                 'challenge': None,
                 'win_rate': round(win_rate, 2)
@@ -425,7 +425,7 @@ def get_agent_analytics():
         # Overall statistics
         total_traders = len(trader_ids)
         active_traders = User.query.filter(
-            and_(User.id.in_(trader_ids), User.status == 'active')
+            and_(User.id.in_(trader_ids), User.is_active == True)
         ).count()
         
         total_commissions = db.session.query(func.sum(Commission.amount)).filter(

@@ -23,7 +23,7 @@ def get_dashboard_stats():
     try:
         # User statistics
         total_users = User.query.count()
-        active_users = User.query.filter_by(status='active').count()
+        active_users = User.query.filter_by(is_active=True).count()
         pending_kyc = User.query.filter_by(kyc_status='pending').count()
         
         # Revenue statistics
@@ -58,7 +58,7 @@ def get_dashboard_stats():
                 'total': total_users,
                 'active': active_users,
                 'pending_kyc': pending_kyc,
-                'suspended': User.query.filter_by(status='suspended').count()
+                'suspended': User.query.filter_by(is_active=False).count()
             },
             'revenue': {
                 'total': float(total_revenue),
@@ -77,7 +77,7 @@ def get_dashboard_stats():
                 'name': f"{user.first_name} {user.last_name}",
                 'email': user.email,
                 'role': user.role,
-                'status': user.status,
+                'status': 'active' if user.is_active else 'inactive',
                 'created_at': user.created_at.isoformat()
             } for user in recent_users],
             'recent_payments': [{
@@ -174,14 +174,14 @@ def get_user(user_id):
             'first_name': user.first_name,
             'last_name': user.last_name,
             'role': user.role,
-            'status': user.status,
+            'is_active': user.is_active,
             'kyc_status': user.kyc_status,
             'phone': user.phone,
             'country_code': user.country_code,
             'created_at': user.created_at.isoformat(),
             'updated_at': user.updated_at.isoformat(),
-            'last_login': user.last_login.isoformat() if user.last_login else None,
-            'email_verified': user.email_verified,
+            'last_login_at': user.last_login_at.isoformat() if user.last_login_at else None,
+            'is_verified': user.is_verified,
             'two_factor_enabled': user.two_factor_enabled
         }), 200
         
@@ -220,10 +220,10 @@ def create_user():
             first_name=data['first_name'],
             last_name=data['last_name'],
             role=data['role'],
-            status=data.get('status', 'active'),
+            is_active=data.get('is_active', True),
             phone=data.get('phone'),
             country_code=data.get('country_code'),
-            email_verified=data.get('email_verified', False)
+            is_verified=data.get('is_verified', False)
         )
         user.set_password(data['password'])
         
@@ -238,7 +238,7 @@ def create_user():
                 'first_name': user.first_name,
                 'last_name': user.last_name,
                 'role': user.role,
-                'status': user.status
+                'is_active': user.is_active
             }
         }), 201
         
@@ -267,8 +267,8 @@ def update_user(user_id):
             user.country_code = data['country_code']
         if 'role' in data:
             user.role = data['role']
-        if 'status' in data:
-            user.status = data['status']
+        if 'is_active' in data:
+            user.is_active = data['is_active']
         if 'kyc_status' in data:
             user.kyc_status = data['kyc_status']
         
@@ -283,7 +283,7 @@ def update_user(user_id):
                 'first_name': user.first_name,
                 'last_name': user.last_name,
                 'role': user.role,
-                'status': user.status,
+                'is_active': user.is_active,
                 'kyc_status': user.kyc_status
             }
         }), 200
@@ -297,16 +297,16 @@ def update_user(user_id):
 @token_required
 @admin_required
 def delete_user(user_id):
-    """Delete a user (soft delete by setting status to deleted)"""
+    """Delete (soft delete) a user"""
     try:
         user = User.query.get_or_404(user_id)
         
-        # Prevent deleting yourself
+        # Prevent self-deletion
         if user.id == g.current_user.id:
             return jsonify({'error': 'Cannot delete yourself'}), 400
         
         # Soft delete
-        user.status = 'deleted'
+        user.is_active = False
         user.updated_at = datetime.utcnow()
         db.session.commit()
         
@@ -317,11 +317,34 @@ def delete_user(user_id):
         return jsonify({'error': str(e)}), 500
 
 
+@admin_bp.route('/users/<int:user_id>/reset-password', methods=['POST'])
+@token_required
+@admin_required
+def admin_reset_password(user_id):
+    """Admin reset user password"""
+    try:
+        user = User.query.get_or_404(user_id)
+        data = request.get_json()
+        
+        if 'new_password' not in data:
+            return jsonify({'error': 'New password is required'}), 400
+        
+        user.set_password(data['new_password'])
+        user.updated_at = datetime.utcnow()
+        db.session.commit()
+        
+        return jsonify({'message': 'Password reset successfully'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
 @admin_bp.route('/programs', methods=['GET'])
 @token_required
 @admin_required
 def get_programs():
-    """Get all programs"""
+    """Get all trading programs"""
     try:
         programs = Program.query.all()
         
@@ -330,13 +353,11 @@ def get_programs():
                 'id': program.id,
                 'name': program.name,
                 'description': program.description,
-                'type': program.type,
                 'account_size': float(program.account_size),
-                'price': float(program.price),
                 'profit_target': float(program.profit_target),
                 'max_daily_loss': float(program.max_daily_loss),
-                'max_total_drawdown': float(program.max_total_drawdown),
-                'min_trading_days': program.min_trading_days,
+                'max_total_loss': float(program.max_total_loss),
+                'price': float(program.price),
                 'is_active': program.is_active,
                 'created_at': program.created_at.isoformat()
             } for program in programs]
@@ -350,30 +371,24 @@ def get_programs():
 @token_required
 @admin_required
 def create_program():
-    """Create a new program"""
+    """Create a new trading program"""
     try:
         data = request.get_json()
         
         # Validate required fields
-        required_fields = [
-            'name', 'type', 'account_size', 'price', 
-            'profit_target', 'max_daily_loss', 'max_total_drawdown'
-        ]
-        valid, message = validate_required_fields(data, required_fields)
+        required = ['name', 'account_size', 'profit_target', 'max_daily_loss', 'max_total_loss', 'price']
+        valid, message = validate_required_fields(data, required)
         if not valid:
             return jsonify({'error': message}), 400
         
-        # Create program
         program = Program(
             name=data['name'],
-            description=data.get('description'),
-            type=data['type'],
+            description=data.get('description', ''),
             account_size=data['account_size'],
-            price=data['price'],
             profit_target=data['profit_target'],
             max_daily_loss=data['max_daily_loss'],
-            max_total_drawdown=data['max_total_drawdown'],
-            min_trading_days=data.get('min_trading_days', 5),
+            max_total_loss=data['max_total_loss'],
+            price=data['price'],
             is_active=data.get('is_active', True)
         )
         
@@ -385,9 +400,7 @@ def create_program():
             'program': {
                 'id': program.id,
                 'name': program.name,
-                'type': program.type,
-                'account_size': float(program.account_size),
-                'price': float(program.price)
+                'account_size': float(program.account_size)
             }
         }), 201
         
@@ -400,7 +413,7 @@ def create_program():
 @token_required
 @admin_required
 def update_program(program_id):
-    """Update a program"""
+    """Update a trading program"""
     try:
         program = Program.query.get_or_404(program_id)
         data = request.get_json()
@@ -410,20 +423,16 @@ def update_program(program_id):
             program.name = data['name']
         if 'description' in data:
             program.description = data['description']
-        if 'type' in data:
-            program.type = data['type']
         if 'account_size' in data:
             program.account_size = data['account_size']
-        if 'price' in data:
-            program.price = data['price']
         if 'profit_target' in data:
             program.profit_target = data['profit_target']
         if 'max_daily_loss' in data:
             program.max_daily_loss = data['max_daily_loss']
-        if 'max_total_drawdown' in data:
-            program.max_total_drawdown = data['max_total_drawdown']
-        if 'min_trading_days' in data:
-            program.min_trading_days = data['min_trading_days']
+        if 'max_total_loss' in data:
+            program.max_total_loss = data['max_total_loss']
+        if 'price' in data:
+            program.price = data['price']
         if 'is_active' in data:
             program.is_active = data['is_active']
         
@@ -434,8 +443,7 @@ def update_program(program_id):
             'message': 'Program updated successfully',
             'program': {
                 'id': program.id,
-                'name': program.name,
-                'is_active': program.is_active
+                'name': program.name
             }
         }), 200
         
@@ -448,13 +456,20 @@ def update_program(program_id):
 @token_required
 @admin_required
 def delete_program(program_id):
-    """Delete a program (soft delete by setting is_active to False)"""
+    """Delete a trading program"""
     try:
         program = Program.query.get_or_404(program_id)
         
-        # Soft delete
-        program.is_active = False
-        program.updated_at = datetime.utcnow()
+        # Check if program has active challenges
+        active_challenges = Challenge.query.filter_by(
+            program_id=program_id,
+            status='active'
+        ).count()
+        
+        if active_challenges > 0:
+            return jsonify({'error': 'Cannot delete program with active challenges'}), 400
+        
+        db.session.delete(program)
         db.session.commit()
         
         return jsonify({'message': 'Program deleted successfully'}), 200
@@ -464,68 +479,125 @@ def delete_program(program_id):
         return jsonify({'error': str(e)}), 500
 
 
-@admin_bp.route('/settings', methods=['GET'])
+@admin_bp.route('/payments', methods=['GET'])
 @token_required
 @admin_required
-def get_settings():
-    """Get system settings (placeholder - implement based on your settings model)"""
+def get_payments():
+    """Get all payments with filtering"""
     try:
-        # This is a placeholder - you'll need to implement a Settings model
-        settings = {
-            'general': {
-                'site_name': 'PropTradePro',
-                'site_description': 'Professional Prop Trading Platform',
-                'support_email': 'support@proptradepro.com',
-                'timezone': 'UTC'
-            },
-            'email': {
-                'provider': 'sendgrid',
-                'sender_email': 'noreply@proptradepro.com',
-                'sender_name': 'PropTradePro'
-            },
-            'payment': {
-                'stripe_enabled': True,
-                'paypal_enabled': False
-            },
-            'notifications': {
-                'email_enabled': True,
-                'sms_enabled': False,
-                'push_enabled': False
-            },
-            'security': {
-                'require_2fa': False,
-                'session_timeout': 30,
-                'password_min_length': 8,
-                'require_special_chars': True
-            },
-            'trading': {
-                'max_leverage': 100,
-                'allowed_markets': ['forex', 'stocks', 'crypto', 'commodities', 'indices']
-            }
-        }
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 20, type=int)
+        status = request.args.get('status')
         
-        return jsonify(settings), 200
+        query = Payment.query
+        
+        if status:
+            query = query.filter_by(status=status)
+        
+        pagination = query.order_by(Payment.created_at.desc()).paginate(
+            page=page, per_page=per_page, error_out=False
+        )
+        
+        return jsonify({
+            'payments': [{
+                'id': payment.id,
+                'user_id': payment.user_id,
+                'amount': float(payment.amount),
+                'currency': payment.currency,
+                'payment_type': payment.payment_type,
+                'payment_method': payment.payment_method,
+                'status': payment.status,
+                'transaction_id': payment.transaction_id,
+                'created_at': payment.created_at.isoformat()
+            } for payment in pagination.items],
+            'pagination': {
+                'page': pagination.page,
+                'per_page': pagination.per_page,
+                'total': pagination.total,
+                'pages': pagination.pages
+            }
+        }), 200
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 
-@admin_bp.route('/settings', methods=['PUT'])
+@admin_bp.route('/kyc/pending', methods=['GET'])
 @token_required
 @admin_required
-def update_settings():
-    """Update system settings (placeholder)"""
+def get_pending_kyc():
+    """Get all pending KYC submissions"""
     try:
-        data = request.get_json()
-        
-        # This is a placeholder - implement actual settings update logic
-        # You'll need to create a Settings model and store these in the database
+        users = User.query.filter_by(kyc_status='pending').all()
         
         return jsonify({
-            'message': 'Settings updated successfully',
-            'settings': data
+            'pending_kyc': [{
+                'id': user.id,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'kyc_submitted_at': user.kyc_submitted_at.isoformat() if user.kyc_submitted_at else None,
+                'kyc_id_url': user.kyc_id_url,
+                'kyc_address_url': user.kyc_address_url,
+                'kyc_selfie_url': user.kyc_selfie_url,
+                'kyc_bank_url': user.kyc_bank_url
+            } for user in users]
         }), 200
         
     except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@admin_bp.route('/kyc/<int:user_id>/approve', methods=['POST'])
+@token_required
+@admin_required
+def approve_kyc(user_id):
+    """Approve user KYC"""
+    try:
+        user = User.query.get_or_404(user_id)
+        
+        if user.kyc_status != 'pending':
+            return jsonify({'error': 'KYC is not pending'}), 400
+        
+        user.kyc_status = 'approved'
+        user.kyc_approved_at = datetime.utcnow()
+        user.kyc_approved_by = g.current_user.id
+        
+        db.session.commit()
+        
+        return jsonify({'message': 'KYC approved successfully'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@admin_bp.route('/kyc/<int:user_id>/reject', methods=['POST'])
+@token_required
+@admin_required
+def reject_kyc(user_id):
+    """Reject user KYC"""
+    try:
+        user = User.query.get_or_404(user_id)
+        data = request.get_json()
+        
+        if user.kyc_status != 'pending':
+            return jsonify({'error': 'KYC is not pending'}), 400
+        
+        if 'reason' not in data:
+            return jsonify({'error': 'Rejection reason is required'}), 400
+        
+        user.kyc_status = 'rejected'
+        user.kyc_rejected_at = datetime.utcnow()
+        user.kyc_rejected_by = g.current_user.id
+        user.kyc_rejection_reason = data['reason']
+        user.kyc_admin_notes = data.get('notes', '')
+        
+        db.session.commit()
+        
+        return jsonify({'message': 'KYC rejected successfully'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
