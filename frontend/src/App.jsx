@@ -36,7 +36,6 @@ import ProgramsManagement from './pages/admin/ProgramsManagement_mui';
 import PaymentsManagement from './pages/admin/PaymentsManagement_mui';
 import KYCApproval from './pages/admin/KYCApproval_mui';
 import Settings from './pages/admin/Settings_mui';
-import Settings from './pages/admin/Settings';
 
 // Agent Pages
 import AgentDashboard from './pages/agent/AgentDashboard';
