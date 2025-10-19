@@ -12,7 +12,7 @@ import ResetPassword from './pages/ResetPassword';
 
 // Public Pages
 import HomePage from './pages/NewHomePage';
-import Programs from './pages/NewPrograms';
+import Programs from './pages/Programs_mui';
 import ProgramDetails from './pages/ProgramDetails';
 import AboutUs from './pages/AboutUs';
 import HowItWorks from './pages/HowItWorks';
@@ -25,7 +25,7 @@ import RiskDisclosure from './pages/RiskDisclosure';
 // Shared Pages
 import Dashboard from './pages/Dashboard';
 import KYC from './pages/KYC';
-import Profile from './pages/Profile';
+import Profile from './pages/user/Profile_mui';
 import ChallengeDetails from './pages/ChallengeDetails';
 
 // Admin Pages
