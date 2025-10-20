@@ -132,13 +132,15 @@ class User(db.Model, TimestampMixin):
     
     def generate_access_token(self):
         """Generate JWT access token"""
+        now = datetime.utcnow()
+        expires_delta = current_app.config['JWT_ACCESS_TOKEN_EXPIRES']
         payload = {
             'user_id': self.id,
             'email': self.email,
             'role': self.role,
             'tenant_id': self.tenant_id,
-            'exp': datetime.utcnow() + current_app.config['JWT_ACCESS_TOKEN_EXPIRES'],
-            'iat': datetime.utcnow(),
+            'exp': now + expires_delta,
+            'iat': now,
             'type': 'access'
         }
         
@@ -150,10 +152,12 @@ class User(db.Model, TimestampMixin):
     
     def generate_refresh_token(self):
         """Generate JWT refresh token"""
+        now = datetime.utcnow()
+        expires_delta = current_app.config['JWT_REFRESH_TOKEN_EXPIRES']
         payload = {
             'user_id': self.id,
-            'exp': datetime.utcnow() + current_app.config['JWT_REFRESH_TOKEN_EXPIRES'],
-            'iat': datetime.utcnow(),
+            'exp': now + expires_delta,
+            'iat': now,
             'type': 'refresh'
         }
         
