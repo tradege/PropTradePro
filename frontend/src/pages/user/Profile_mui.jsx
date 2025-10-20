@@ -29,12 +29,25 @@ export default function Profile() {
   const { user } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    name: user?.name || 'John Doe',
-    email: user?.email || 'john@example.com',
-    phone: '+1 234 567 8900',
-    location: 'New York, USA',
-    bio: 'Professional trader with 5+ years of experience in forex and crypto markets.',
+    name: user ? `${user.first_name} ${user.last_name}` : 'Loading...',
+    email: user?.email || 'Loading...',
+    phone: user?.phone || 'Not provided',
+    location: user?.country_code || 'Not provided',
+    bio: 'Professional trader',
   });
+
+  // Update formData when user changes
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: `${user.first_name} ${user.last_name}`,
+        email: user.email,
+        phone: user.phone || 'Not provided',
+        location: user.country_code || 'Not provided',
+        bio: 'Professional trader',
+      });
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
