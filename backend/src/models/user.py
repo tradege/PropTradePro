@@ -72,7 +72,7 @@ class User(db.Model, TimestampMixin):
     kyc_bank_notes = db.Column(db.Text)
     
     # Role and Permissions
-    role = db.Column(db.String(20), default='trader', nullable=False)  # supermaster, master, agent, trader
+    role = db.Column(db.String(20), default='guest', nullable=False)  # supermaster, master, agent, trader, guest
     
     # Hierarchy (MLM Structure)
     parent_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)  # Who created this user
@@ -226,10 +226,11 @@ class User(db.Model, TimestampMixin):
     def can_create_user(self, target_role):
         """Check if this user can create a user with target_role"""
         role_hierarchy = {
-            'supermaster': ['supermaster', 'master', 'agent', 'trader'],
-            'master': ['master', 'agent', 'trader'],
-            'agent': ['agent', 'trader'],
-            'trader': []  # Traders cannot create users
+            'supermaster': ['supermaster', 'master', 'agent', 'trader', 'guest'],
+            'master': ['master', 'agent', 'trader', 'guest'],
+            'agent': ['agent', 'trader', 'guest'],
+            'trader': [],  # Traders cannot create users
+            'guest': []  # Guests cannot create users
         }
         return target_role in role_hierarchy.get(self.role, [])
     
