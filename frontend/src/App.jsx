@@ -29,6 +29,7 @@ import RiskDisclosure from './pages/RiskDisclosure';
 import Dashboard from './pages/Dashboard_mui';
 import KYC from './pages/KYC';
 import Profile from './pages/user/Profile_mui';
+import MyChallenges from './pages/user/MyChallenges';
 import ChallengeDetails from './pages/ChallengeDetails';
 
 // Admin Pages
@@ -169,6 +170,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/challenges"
+          element={
+            <ProtectedRoute>
+              <MyChallenges />
             </ProtectedRoute>
           }
         />
