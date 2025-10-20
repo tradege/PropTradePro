@@ -4,6 +4,7 @@ Models package
 from src.models.user import User, EmailVerificationToken, PasswordResetToken
 from src.models.tenant import Tenant
 from src.models.trading_program import TradingProgram, ProgramAddOn, Challenge
+from src.models.lead import Lead, LeadActivity, LeadNote
 from src.models.agent import Agent
 from src.models.referral import Referral
 from src.models.commission import Commission
@@ -24,6 +25,12 @@ __all__ = [
     'Commission',
     'Withdrawal',
     'Trade',
-    'Payment'
+    'Payment',
+    'Lead',
+    'LeadActivity',
+    'LeadNote'
 ]
+
+# Alias for backward compatibility
+Program = TradingProgram
 
