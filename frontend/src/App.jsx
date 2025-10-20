@@ -34,7 +34,7 @@ import ChallengeDetails from './pages/ChallengeDetails';
 
 // Admin Pages
 import AdminLayout from './components/mui/AdminLayout';
-import AdminDashboard from './pages/admin/AdminDashboard_mui';
+import AdminDashboard from './pages/admin/AdminDashboardConnected';
 import UserManagement from './pages/admin/UserManagement_mui';
 import ProgramsManagement from './pages/admin/ProgramsManagement_mui';
 import PaymentsManagement from './pages/admin/PaymentsManagement_mui';
