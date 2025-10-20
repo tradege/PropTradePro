@@ -12,7 +12,7 @@ import ResetPassword from './pages/ResetPassword';
 
 // Public Pages
 import HomePage from './pages/NewHomePage';
-import Programs from './pages/Programs';
+import Programs from './pages/ProgramsNew';
 import ProgramDetails from './pages/ProgramDetails';
 import OnePhaseChallenge from './pages/OnePhaseChallenge';
 import TwoPhaseChallenge from './pages/TwoPhaseChallenge';
