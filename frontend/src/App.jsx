@@ -38,7 +38,7 @@ import AdminDashboard from './pages/admin/AdminDashboardConnected';
 import UserManagement from './pages/admin/UserManagementConnected';
 import ProgramsManagement from './pages/admin/ProgramsManagement_mui';
 import PaymentsManagement from './pages/admin/PaymentsManagementConnected';
-import KYCApproval from './pages/admin/KYCApproval_mui';
+import KYCApproval from './pages/admin/KYCApprovalConnected';
 import Settings from './pages/admin/Settings_mui';
 
 // Agent Pages
