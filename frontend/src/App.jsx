@@ -37,7 +37,7 @@ import AdminLayout from './components/mui/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboardConnected';
 import UserManagement from './pages/admin/UserManagementConnected';
 import ProgramsManagement from './pages/admin/ProgramsManagement_mui';
-import PaymentsManagement from './pages/admin/PaymentsManagement_mui';
+import PaymentsManagement from './pages/admin/PaymentsManagementConnected';
 import KYCApproval from './pages/admin/KYCApproval_mui';
 import Settings from './pages/admin/Settings_mui';
 
