@@ -455,7 +455,7 @@ def disable_2fa():
 @auth_bp.route('/me', methods=['GET'])
 @token_required
 def get_current_user():
-    """Get current user info"""
+    """Get current user info (exempt from rate limiting)"""
     return jsonify({
         'user': g.current_user.to_dict(include_sensitive=True)
     }), 200
