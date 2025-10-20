@@ -504,7 +504,7 @@ def get_payments():
                 'user_id': payment.user_id,
                 'amount': float(payment.amount),
                 'currency': payment.currency,
-                'payment_type': payment.payment_type,
+                'payment_type': payment.purpose,
                 'payment_method': payment.payment_method,
                 'status': payment.status,
                 'transaction_id': payment.transaction_id,
