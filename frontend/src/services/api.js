@@ -77,7 +77,7 @@ export const authAPI = {
 
 // Programs API
 export const programsAPI = {
-  getAll: (params) => api.get('/programs', { params }),
+  getAll: (params) => api.get('/programs/', { params }),
   getById: (id) => api.get(`/programs/${id}`),
   create: (data) => api.post('/programs', data),
   update: (id, data) => api.put(`/programs/${id}`, data),
