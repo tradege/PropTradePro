@@ -31,7 +31,7 @@ class Config:
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
     
     # CORS
-    CORS_ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://localhost:5173,http://146.190.21.113,http://marketedgepros.com,https://marketedgepros.com').split(',')
+    CORS_ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://localhost:5173,http://146.190.21.113,http://146.190.21.113:3000,http://marketedgepros.com,https://marketedgepros.com').split(',')
     
     # Stripe
     STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
