@@ -84,7 +84,7 @@ def get_dashboard_stats():
                 'id': payment.id,
                 'user_id': payment.user_id,
                 'amount': float(payment.amount),
-                'type': payment.payment_type,
+                'type': payment.purpose,
                 'status': payment.status,
                 'created_at': payment.created_at.isoformat()
             } for payment in recent_payments]
