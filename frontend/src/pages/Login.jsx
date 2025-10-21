@@ -34,7 +34,17 @@ export default function Login() {
         setRequires2FA(true);
         setUserId(result.userId);
       } else {
-        navigate('/dashboard');
+        // Redirect based on user role
+        const userRole = result.user?.role || 'user';
+        if (userRole === 'supermaster' || userRole === 'admin_master' || userRole === 'master') {
+          navigate('/admin');
+        } else if (userRole === 'agent') {
+          navigate('/agent');
+        } else if (userRole === 'user') {
+          navigate('/');
+        } else {
+          navigate('/dashboard');
+        }
       }
     } catch (err) {
     } finally {
@@ -47,8 +57,18 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      await login2FA(userId, twoFactorToken);
-      navigate('/dashboard');
+      const result = await login2FA(userId, twoFactorToken);
+      // Redirect based on user role
+      const userRole = result.user?.role || 'user';
+      if (userRole === 'supermaster' || userRole === 'admin_master' || userRole === 'master') {
+        navigate('/admin');
+      } else if (userRole === 'agent') {
+        navigate('/agent');
+      } else if (userRole === 'user') {
+        navigate('/');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
     } finally {
       setIsLoading(false);
