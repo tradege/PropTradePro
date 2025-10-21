@@ -53,7 +53,6 @@ export default function KYCApproval() {
           <Grid item xs={12} sm={6} lg={3} key={i}><StatsCard {...stat} /></Grid>
         ))}
       </Grid>
-      <DataTable columns={columns} rows={kyc} onView={(row) => console.log('View', row)} />
     </Box>
   );
 }

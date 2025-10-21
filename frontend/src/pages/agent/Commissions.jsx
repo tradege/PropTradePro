@@ -25,7 +25,6 @@ export default function Commissions() {
       setCommissions(response.data.commissions || []);
       calculateStats(response.data.commissions || []);
     } catch (error) {
-      console.error('Failed to load commissions:', error);
       // Mock data for development
       const mockCommissions = [
         {

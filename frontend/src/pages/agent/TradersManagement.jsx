@@ -21,7 +21,6 @@ export default function TradersManagement() {
       const response = await api.get('/agent/traders');
       setTraders(response.data.traders || []);
     } catch (error) {
-      console.error('Failed to load traders:', error);
       // Mock data for development
       setTraders([
         {

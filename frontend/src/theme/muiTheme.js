@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-// PropTradePro Material Design Theme
+// MarketEdgePros Material Design Theme
 const muiTheme = createTheme({
   palette: {
     mode: 'dark',

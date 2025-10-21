@@ -44,7 +44,6 @@ function KYCApproval() {
       setAllUsers(usersResponse.data.users);
       setError(null);
     } catch (err) {
-      console.error('Failed to fetch KYC data:', err);
       setError('Failed to load KYC data');
     } finally {
       setLoading(false);
@@ -68,7 +67,6 @@ function KYCApproval() {
       fetchData();
       alert('KYC approved successfully');
     } catch (err) {
-      console.error('Failed to approve KYC:', err);
       alert('Failed to approve KYC');
     }
   };
@@ -93,7 +91,6 @@ function KYCApproval() {
       fetchData();
       alert('KYC rejected successfully');
     } catch (err) {
-      console.error('Failed to reject KYC:', err);
       alert('Failed to reject KYC');
     }
   };

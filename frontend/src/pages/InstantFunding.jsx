@@ -59,7 +59,6 @@ export default function OnePhaseChallenge() {
 
   const handlePurchase = (account) => {
     // TODO: Implement purchase logic
-    console.log('Purchase:', account);
   };
 
   return (
@@ -75,7 +74,7 @@ export default function OnePhaseChallenge() {
             Back to Programs
           </Button>
           <Typography variant="h6" sx={{ flexGrow: 1, color: 'white' }}>
-            PropTradePro
+            MarketEdgePros
           </Typography>
           <Button onClick={() => navigate('/login')} sx={{ color: 'white' }}>
             Login

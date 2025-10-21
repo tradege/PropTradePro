@@ -175,15 +175,12 @@ export default function PaymentsManagement() {
   const [filterType, setFilterType] = useState('all');
 
   const handleView = (payment) => {
-    console.log('View payment:', payment);
   };
 
   const handleApprove = (payment) => {
-    console.log('Approve payment:', payment);
   };
 
   const handleReject = (payment) => {
-    console.log('Reject payment:', payment);
   };
 
   const filteredPayments = payments.filter((payment) => {

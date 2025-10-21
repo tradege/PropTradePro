@@ -30,7 +30,6 @@ export default function Dashboard() {
       const response = await programsAPI.getMyChallenges();
       setChallenges(response.data.challenges || []);
     } catch (error) {
-      console.error('Failed to load challenges:', error);
     } finally {
       setIsLoading(false);
     }

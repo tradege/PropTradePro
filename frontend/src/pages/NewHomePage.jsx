@@ -20,7 +20,6 @@ export default function NewHomePage() {
       const response = await axios.get(`${API_URL}/api/v1/programs/`);
       setPrograms(response.data.programs || []);
     } catch (error) {
-      console.error('Error fetching programs:', error);
     } finally {
       setLoading(false);
     }
@@ -64,23 +63,25 @@ export default function NewHomePage() {
             Join thousands of traders worldwide and become a funded trader with the most flexible and trader-friendly prop firm.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center" role="group" aria-label="Call to action buttons">
             <Link 
               to="/register" 
               className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg text-white font-bold text-lg hover:from-blue-600 hover:to-purple-700 transition transform hover:scale-105"
+              aria-label="Start trading now - Register for a new account"
             >
               Start Trading Now
             </Link>
             <Link 
               to="/programs" 
               className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white font-bold text-lg hover:bg-white/20 transition"
+              aria-label="Explore our trading programs"
             >
               Explore Programs
             </Link>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
+          <section className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16" aria-label="Company statistics">
             <div className="text-center">
               <div className="text-4xl font-bold text-blue-400 mb-2">$10M+</div>
               <div className="text-gray-400">Capital Deployed</div>
@@ -97,7 +98,7 @@ export default function NewHomePage() {
               <div className="text-4xl font-bold text-cyan-400 mb-2">24/7</div>
               <div className="text-gray-400">Support</div>
             </div>
-          </div>
+          </section>
         </div>
       </section>
 
@@ -249,7 +250,7 @@ export default function NewHomePage() {
       <section className="py-20 bg-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-white mb-4">Why Choose PropTradePro?</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">Why Choose MarketEdgePros?</h2>
             <p className="text-xl text-gray-400">Everything you need to succeed as a funded trader</p>
           </div>
 

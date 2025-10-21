@@ -74,7 +74,7 @@ export default function AdminLayout({ children }) {
                   <span className="text-white font-bold text-sm">PT</span>
                 </div>
                 <span className="text-xl font-bold text-white hidden sm:block">
-                  PropTradePro <span className="text-blue-400">Admin</span>
+                  MarketEdgePros <span className="text-blue-400">Admin</span>
                 </span>
               </Link>
             </div>

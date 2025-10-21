@@ -7,15 +7,15 @@ export default function Settings() {
   const [isSaving, setIsSaving] = useState(false);
   const [settings, setSettings] = useState({
     // General Settings
-    siteName: 'PropTradePro',
+    siteName: 'MarketEdgePros',
     siteDescription: 'Professional Prop Trading Platform',
-    supportEmail: 'support@proptradepro.com',
+    supportEmail: 'support@marketedgepros.com',
     timezone: 'UTC',
     
     // Email Settings
     emailProvider: 'sendgrid',
-    emailFrom: 'noreply@proptradepro.com',
-    emailFromName: 'PropTradePro',
+    emailFrom: 'noreply@marketedgepros.com',
+    emailFromName: 'MarketEdgePros',
     
     // Payment Settings
     stripeEnabled: true,
@@ -49,7 +49,6 @@ export default function Settings() {
       const response = await api.get('/admin/settings');
       setSettings({ ...settings, ...response.data.settings });
     } catch (error) {
-      console.error('Failed to load settings:', error);
     }
   };
 
@@ -59,7 +58,6 @@ export default function Settings() {
       await api.put('/admin/settings', settings);
       alert('Settings saved successfully');
     } catch (error) {
-      console.error('Failed to save settings:', error);
       alert('Failed to save settings. Please try again.');
     } finally {
       setIsSaving(false);

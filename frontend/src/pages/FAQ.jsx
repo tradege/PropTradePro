@@ -11,8 +11,8 @@ export default function FAQ() {
       name: 'Getting Started',
       questions: [
         {
-          q: 'What is PropTradePro?',
-          a: 'PropTradePro is a proprietary trading firm that provides capital to skilled traders. We fund traders who demonstrate consistent profitability and proper risk management, allowing them to trade with our capital and keep up to 90% of the profits.'
+          q: 'What is MarketEdgePros?',
+          a: 'MarketEdgePros is a proprietary trading firm that provides capital to skilled traders. We fund traders who demonstrate consistent profitability and proper risk management, allowing them to trade with our capital and keep up to 90% of the profits.'
         },
         {
           q: 'How do I get started?',
@@ -158,7 +158,7 @@ export default function FAQ() {
               Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Questions</span>
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Find answers to common questions about PropTradePro, our challenges, and funded accounts.
+              Find answers to common questions about MarketEdgePros, our challenges, and funded accounts.
             </p>
 
             {/* Search Bar */}

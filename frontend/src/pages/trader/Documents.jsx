@@ -45,7 +45,6 @@ export default function Documents() {
       const response = await api.get('/trader/documents');
       setDocuments(response.data.documents || []);
     } catch (error) {
-      console.error('Failed to load documents:', error);
       // Mock data for development
       setDocuments([
         {
@@ -102,7 +101,6 @@ export default function Documents() {
       loadDocuments();
       alert('Document uploaded successfully');
     } catch (error) {
-      console.error('Failed to upload document:', error);
       alert('Failed to upload document. Please try again.');
     } finally {
       setUploadingType(null);

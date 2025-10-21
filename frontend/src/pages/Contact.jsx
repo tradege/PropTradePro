@@ -62,8 +62,8 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="text-white font-semibold mb-1">Email</h3>
-                    <a href="mailto:support@proptradepro.com" className="text-gray-300 hover:text-blue-400 transition-colors">
-                      support@proptradepro.com
+                    <a href="mailto:support@marketedgepros.com" className="text-gray-300 hover:text-blue-400 transition-colors">
+                      support@marketedgepros.com
                     </a>
                   </div>
                 </div>

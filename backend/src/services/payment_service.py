@@ -79,7 +79,7 @@ class PaymentService:
                     'program_id': challenge.program_id,
                     'program_name': challenge.program.name
                 },
-                'description': f'PropTradePro - {challenge.program.name}',
+                'description': f'MarketEdgePros - {challenge.program.name}',
                 'receipt_email': user.email
             }
             

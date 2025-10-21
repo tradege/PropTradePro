@@ -27,7 +27,6 @@ export default function PaymentsManagement() {
       setPayments(response.data.payments || []);
       calculateStats(response.data.payments || []);
     } catch (error) {
-      console.error('Failed to load payments:', error);
       // Mock data for development
       const mockPayments = [
         {
@@ -108,7 +107,6 @@ export default function PaymentsManagement() {
       loadPayments();
       alert('Payment refunded successfully');
     } catch (error) {
-      console.error('Failed to refund payment:', error);
       alert('Failed to refund payment. Please try again.');
     }
   };

@@ -213,7 +213,15 @@ def verify_email(token):
 @auth_bp.route('/verify-email', methods=['POST'])
 def verify_email_with_code():
     """Verify email with 6-digit code"""
+    from src.models.verification_attempt import VerificationAttempt
+    import logging
+    
     data = request.get_json()
+    logger = logging.getLogger(__name__)
+    
+    # Get IP and User Agent
+    ip_address = request.remote_addr
+    user_agent = request.headers.get('User-Agent', '')
     
     # Validate required fields
     valid, message = validate_required_fields(data, ['email', 'code'])
@@ -224,8 +232,37 @@ def verify_email_with_code():
     if not data['code'].isdigit() or len(data['code']) != 6:
         return jsonify({'error': 'Code must be 6 digits'}), 400
     
+    email = data['email']
+    code = data['code']
+    
+    # Check rate limiting
+    if VerificationAttempt.is_rate_limited(email, ip_address, max_attempts=5, window_minutes=15):
+        logger.warning(f'Rate limit exceeded for email verification: {email} from IP {ip_address}')
+        VerificationAttempt.log_attempt(
+            email=email,
+            code_entered=code,
+            success=False,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            failure_reason='rate_limited'
+        )
+        return jsonify({
+            'error': 'Too many failed attempts. Please try again in 15 minutes.'
+        }), 429
+    
     try:
-        user = AuthService.verify_email_with_code(data['email'], data['code'])
+        user = AuthService.verify_email_with_code(email, code)
+        
+        # Log successful attempt
+        VerificationAttempt.log_attempt(
+            email=email,
+            code_entered=code,
+            success=True,
+            ip_address=ip_address,
+            user_agent=user_agent
+        )
+        
+        logger.info(f'Email verified successfully: {email} from IP {ip_address}')
         
         # Send welcome email
         EmailService.send_welcome_email(user)
@@ -236,8 +273,33 @@ def verify_email_with_code():
         }), 200
         
     except ValueError as e:
+        # Log failed attempt
+        failure_reason = str(e).lower().replace(' ', '_')
+        VerificationAttempt.log_attempt(
+            email=email,
+            code_entered=code,
+            success=False,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            failure_reason=failure_reason
+        )
+        
+        logger.warning(f'Email verification failed for {email}: {str(e)} from IP {ip_address}')
+        
         return jsonify({'error': str(e)}), 400
     except Exception as e:
+        # Log failed attempt
+        VerificationAttempt.log_attempt(
+            email=email,
+            code_entered=code,
+            success=False,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            failure_reason='system_error'
+        )
+        
+        logger.error(f'Email verification system error for {email}: {str(e)} from IP {ip_address}')
+        
         return jsonify({'error': 'Email verification failed'}), 500
 
 

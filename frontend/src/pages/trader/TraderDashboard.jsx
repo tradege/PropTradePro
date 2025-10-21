@@ -80,7 +80,6 @@ export default function TraderDashboard() {
         },
       ]);
     } catch (error) {
-      console.error('Failed to load dashboard data:', error);
     } finally {
       setIsLoading(false);
     }

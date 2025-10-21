@@ -1,0 +1,71 @@
+=================================================================
+PROPTRADEPRO - USER DASHBOARD UPDATE
+FILES TO DEPLOY TO REMOTE SERVER (146.190.21.113)
+=================================================================
+
+BACKEND FILES (Priority: HIGH - Required for functionality)
+-----------------------------------------------------------
+1. src/routes/users.py [NEW FILE]
+   Location: /home/ubuntu/PropTradePro/backend/src/routes/users.py
+   Deploy to: /root/PropTradePro/backend/src/routes/users.py
+   Description: Contains /dashboard endpoint for user statistics
+
+2. .env [CREATE IF MISSING]
+   Location: /home/ubuntu/PropTradePro/backend/.env
+   Deploy to: /root/PropTradePro/backend/.env
+   Description: Environment configuration with database credentials
+
+3. src/config.py [OPTIONAL - Recommended]
+   Location: /home/ubuntu/PropTradePro/backend/src/config.py
+   Deploy to: /root/PropTradePro/backend/src/config.py
+   Description: Fixed ProductionConfig error handling
+
+4. src/database.py [OPTIONAL - Recommended]
+   Location: /home/ubuntu/PropTradePro/backend/src/database.py
+   Deploy to: /root/PropTradePro/backend/src/database.py
+   Description: Added Redis connection error handling
+
+FRONTEND FILES (Priority: HIGH - Required for functionality)
+-----------------------------------------------------------
+1. src/pages/user/UserDashboard_mui.jsx [UPDATED]
+   Location: /home/ubuntu/PropTradePro/frontend/src/pages/user/UserDashboard_mui.jsx
+   Deploy to: /root/PropTradePro/frontend/src/pages/user/UserDashboard_mui.jsx
+   Description: Updated to fetch real data from API
+
+DOCUMENTATION FILES (Priority: LOW - For reference)
+-----------------------------------------------------------
+1. USER_DASHBOARD_UPDATE_GUIDE.md
+   Location: /home/ubuntu/PropTradePro/USER_DASHBOARD_UPDATE_GUIDE.md
+   Description: Step-by-step deployment instructions
+
+2. USER_DASHBOARD_INTEGRATION_STATUS.md
+   Location: /home/ubuntu/PropTradePro/USER_DASHBOARD_INTEGRATION_STATUS.md
+   Description: Status report and testing details
+
+=================================================================
+DEPLOYMENT STEPS SUMMARY
+=================================================================
+
+1. SSH into server: ssh root@146.190.21.113
+2. Navigate to backend: cd /root/PropTradePro/backend
+3. Create users.py file in src/routes/
+4. Create/update .env file
+5. Restart backend server
+6. Navigate to frontend: cd /root/PropTradePro/frontend
+7. Update UserDashboard_mui.jsx
+8. Rebuild frontend (if production)
+9. Test in browser
+
+=================================================================
+VERIFICATION
+=================================================================
+
+Backend:
+  curl http://146.190.21.113:5000/api/v1/users/dashboard \
+    -H "Authorization: Bearer <token>"
+
+Frontend:
+  Open http://146.190.21.113:3000
+  Login and check User Dashboard
+
+=================================================================

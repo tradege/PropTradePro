@@ -62,7 +62,6 @@ export default function KYCApproval() {
         },
       ]);
     } catch (error) {
-      console.error('Failed to load KYC submissions:', error);
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +81,6 @@ export default function KYCApproval() {
       ));
       setSelectedSubmission(null);
     } catch (error) {
-      console.error('Failed to approve KYC:', error);
     }
   };
 
@@ -99,7 +97,6 @@ export default function KYCApproval() {
       ));
       setSelectedSubmission(null);
     } catch (error) {
-      console.error('Failed to reject KYC:', error);
     }
   };
 

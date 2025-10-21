@@ -1,290 +1,394 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  Button,
-  Avatar,
-  Grid,
-  Chip,
-  Divider,
-  Alert,
-} from '@mui/material';
-import {
-  Person,
-  Email,
-  Phone,
-  LocationOn,
-  CalendarToday,
-  Edit,
-  Save,
-  Cancel,
-} from '@mui/icons-material';
-import UserLayout from '../../components/mui/UserLayout';
+import { useState, useRef } from 'react';
 import useAuthStore from '../../store/authStore';
+import { profileAPI } from '../../services/api';
+import {
+  User, Mail, Phone, Lock, Shield, CheckCircle,
+  AlertCircle, Camera, Trash2, Upload
+} from 'lucide-react';
 
 export default function Profile() {
-  const { user } = useAuthStore();
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    name: user ? `${user.first_name} ${user.last_name}` : 'Loading...',
-    email: user?.email || 'Loading...',
-    phone: user?.phone || 'Not provided',
-    location: user?.country_code || 'Not provided',
-    bio: 'Professional trader',
+  const { user, updateUser } = useAuthStore();
+  const [activeTab, setActiveTab] = useState('personal');
+  const fileInputRef = useRef(null);
+  
+  // Personal Info
+  const [personalData, setPersonalData] = useState({
+    first_name: user?.first_name || '',
+    last_name: user?.last_name || '',
+    phone: user?.phone || '',
   });
+  const [isUpdatingPersonal, setIsUpdatingPersonal] = useState(false);
+  
+  // Password
+  const [passwordData, setPasswordData] = useState({
+    current_password: '',
+    new_password: '',
+    confirm_password: '',
+  });
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  
+  // Avatar
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
-  // Update formData when user changes
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        name: `${user.first_name} ${user.last_name}`,
-        email: user.email,
-        phone: user.phone || 'Not provided',
-        location: user.country_code || 'Not provided',
-        bio: 'Professional trader',
-      });
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
     }
-  }, [user]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB');
+      return;
+    }
+
+    try {
+      setIsUploadingAvatar(true);
+      const response = await profileAPI.uploadAvatar(file);
+      updateUser({ avatar_url: response.data.avatar_url });
+      alert('Profile picture updated successfully!');
+    } catch (error) {
+      alert(error.response?.data?.error || 'Failed to upload avatar');
+    } finally {
+      setIsUploadingAvatar(false);
+    }
   };
 
-  const handleSave = () => {
-    // TODO: API call to update profile
-    setIsEditing(false);
+  const handleDeleteAvatar = async () => {
+    if (!confirm('Are you sure you want to delete your profile picture?')) return;
+
+    try {
+      setIsUploadingAvatar(true);
+      await profileAPI.deleteAvatar();
+      updateUser({ avatar_url: null });
+      alert('Profile picture deleted successfully!');
+    } catch (error) {
+      alert(error.response?.data?.error || 'Failed to delete avatar');
+    } finally {
+      setIsUploadingAvatar(false);
+    }
   };
 
-  const stats = [
-    { label: 'Total Challenges', value: '12', color: '#667eea' },
-    { label: 'Success Rate', value: '75%', color: '#43e97b' },
-    { label: 'Total Profit', value: '$45,230', color: '#4facfe' },
-    { label: 'Member Since', value: 'Jan 2024', color: '#f093fb' },
-  ];
+  const handlePersonalUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      setIsUpdatingPersonal(true);
+      const response = await profileAPI.updateProfile(personalData);
+      updateUser(response.data.user);
+      alert('Profile updated successfully!');
+    } catch (error) {
+      alert(error.response?.data?.error || 'Failed to update profile');
+    } finally {
+      setIsUpdatingPersonal(false);
+    }
+  };
+
+  const handlePasswordUpdate = async (e) => {
+    e.preventDefault();
+
+    if (passwordData.new_password !== passwordData.confirm_password) {
+      alert('New passwords do not match');
+      return;
+    }
+
+    if (passwordData.new_password.length < 8) {
+      alert('Password must be at least 8 characters');
+      return;
+    }
+
+    try {
+      setIsUpdatingPassword(true);
+      await profileAPI.changePassword({
+        current_password: passwordData.current_password,
+        new_password: passwordData.new_password,
+      });
+      alert('Password changed successfully!');
+      setPasswordData({
+        current_password: '',
+        new_password: '',
+        confirm_password: '',
+      });
+    } catch (error) {
+      alert(error.response?.data?.error || 'Failed to change password');
+    } finally {
+      setIsUpdatingPassword(false);
+    }
+  };
 
   return (
-    <UserLayout>
-      <Box>
-        <Typography variant="h4" sx={{ mb: 3, color: 'white', fontWeight: 700 }}>
-          My Profile
-        </Typography>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <h1 className="text-3xl font-bold text-gray-900">Profile Settings ✨ NEW</h1>
+          <p className="text-gray-600 mt-2">Manage your account settings and preferences</p>
+        </div>
+      </div>
 
-        {/* Profile Header Card */}
-        <Card sx={{ mb: 3, bgcolor: '#1a1f2e', borderRadius: 3 }}>
-          <CardContent sx={{ p: 4 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-              <Avatar
-                sx={{
-                  width: 100,
-                  height: 100,
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  fontSize: '3rem',
-                  fontWeight: 700,
-                  mr: 3,
-                }}
-              >
-                {formData.name.charAt(0)}
-              </Avatar>
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="h5" sx={{ color: 'white', fontWeight: 600, mb: 1 }}>
-                  {formData.name}
-                </Typography>
-                <Chip
-                  label={user?.role || 'Trader'}
-                  sx={{
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    color: 'white',
-                    fontWeight: 600,
-                  }}
-                />
-              </Box>
-              <Button
-                variant={isEditing ? 'outlined' : 'contained'}
-                startIcon={isEditing ? <Cancel /> : <Edit />}
-                onClick={() => setIsEditing(!isEditing)}
-                sx={{
-                  background: isEditing ? 'transparent' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  borderColor: isEditing ? '#667eea' : 'transparent',
-                  color: 'white',
-                  '&:hover': {
-                    background: isEditing ? 'rgba(102, 126, 234, 0.1)' : 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
-                  },
-                }}
-              >
-                {isEditing ? 'Cancel' : 'Edit Profile'}
-              </Button>
-            </Box>
-
-            {/* Stats Grid */}
-            <Grid container spacing={2}>
-              {stats.map((stat, index) => (
-                <Grid item xs={12} sm={6} md={3} key={index}>
-                  <Box
-                    sx={{
-                      p: 2,
-                      borderRadius: 2,
-                      bgcolor: 'rgba(255,255,255,0.05)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <Typography variant="h5" sx={{ color: stat.color, fontWeight: 700, mb: 0.5 }}>
-                      {stat.value}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>
-                      {stat.label}
-                    </Typography>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-          </CardContent>
-        </Card>
-
-        {/* Profile Information Card */}
-        <Card sx={{ bgcolor: '#1a1f2e', borderRadius: 3 }}>
-          <CardContent sx={{ p: 4 }}>
-            <Typography variant="h6" sx={{ color: 'white', fontWeight: 600, mb: 3 }}>
-              Personal Information
-            </Typography>
-
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Full Name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  InputProps={{
-                    startAdornment: <Person sx={{ mr: 1, color: '#667eea' }} />,
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Email Address"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  InputProps={{
-                    startAdornment: <Email sx={{ mr: 1, color: '#4facfe' }} />,
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Phone Number"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  InputProps={{
-                    startAdornment: <Phone sx={{ mr: 1, color: '#43e97b' }} />,
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Location"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  InputProps={{
-                    startAdornment: <LocationOn sx={{ mr: 1, color: '#f093fb' }} />,
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Bio"
-                  name="bio"
-                  value={formData.bio}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  multiline
-                  rows={4}
-                />
-              </Grid>
-
-              {isEditing && (
-                <Grid item xs={12}>
-                  <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-                    <Button
-                      variant="outlined"
-                      onClick={() => setIsEditing(false)}
-                      sx={{ borderColor: '#667eea', color: '#667eea' }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="contained"
-                      startIcon={<Save />}
-                      onClick={handleSave}
-                      sx={{
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        '&:hover': {
-                          background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
-                        },
-                      }}
-                    >
-                      Save Changes
-                    </Button>
-                  </Box>
-                </Grid>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Avatar Section */}
+        <div className="bg-white rounded-lg shadow-sm mb-6 p-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">Profile Picture</h2>
+          <div className="flex items-center gap-6">
+            <div className="relative">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-2xl font-bold overflow-hidden">
+                {user?.avatar_url ? (
+                  <img 
+                    src={user.avatar_url} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span>{user?.first_name?.[0]}{user?.last_name?.[0]}</span>
+                )}
+              </div>
+              {isUploadingAvatar && (
+                <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                </div>
               )}
-            </Grid>
-          </CardContent>
-        </Card>
+            </div>
+            
+            <div className="flex-1">
+              <div className="flex gap-3">
+                <button
+                  onClick={handleAvatarClick}
+                  disabled={isUploadingAvatar}
+                  className="btn btn-primary text-sm disabled:opacity-50"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Upload New Photo
+                </button>
+                {user?.avatar_url && (
+                  <button
+                    onClick={handleDeleteAvatar}
+                    disabled={isUploadingAvatar}
+                    className="btn btn-outline text-sm disabled:opacity-50"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete
+                  </button>
+                )}
+              </div>
+              <p className="text-sm text-gray-500 mt-2">
+                JPG, PNG or GIF. Max size 5MB.
+              </p>
+            </div>
+            
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              className="hidden"
+            />
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="bg-white rounded-lg shadow-sm mb-6">
+          <div className="border-b border-gray-200">
+            <nav className="flex -mb-px">
+              <button
+                onClick={() => setActiveTab('personal')}
+                className={`px-6 py-4 text-sm font-medium border-b-2 ${
+                  activeTab === 'personal'
+                    ? 'border-primary-500 text-primary-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <User className="w-4 h-4 inline mr-2" />
+                Personal Information
+              </button>
+              <button
+                onClick={() => setActiveTab('security')}
+                className={`px-6 py-4 text-sm font-medium border-b-2 ${
+                  activeTab === 'security'
+                    ? 'border-primary-500 text-primary-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <Lock className="w-4 h-4 inline mr-2" />
+                Security
+              </button>
+            </nav>
+          </div>
+
+          <div className="p-6">
+            {activeTab === 'personal' && (
+              <form onSubmit={handlePersonalUpdate} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      value={personalData.first_name}
+                      onChange={(e) => setPersonalData({ ...personalData, first_name: e.target.value })}
+                      className="input"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      value={personalData.last_name}
+                      onChange={(e) => setPersonalData({ ...personalData, last_name: e.target.value })}
+                      className="input"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    value={user?.email}
+                    disabled
+                    className="input bg-gray-50"
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Email cannot be changed. Contact support if needed.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={personalData.phone}
+                    onChange={(e) => setPersonalData({ ...personalData, phone: e.target.value })}
+                    className="input"
+                    placeholder="+1234567890"
+                  />
+                </div>
+
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={isUpdatingPersonal}
+                    className="btn btn-primary disabled:opacity-50"
+                  >
+                    {isUpdatingPersonal ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {activeTab === 'security' && (
+              <form onSubmit={handlePasswordUpdate} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Current Password
+                  </label>
+                  <input
+                    type="password"
+                    value={passwordData.current_password}
+                    onChange={(e) => setPasswordData({ ...passwordData, current_password: e.target.value })}
+                    className="input"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    value={passwordData.new_password}
+                    onChange={(e) => setPasswordData({ ...passwordData, new_password: e.target.value })}
+                    className="input"
+                    required
+                    minLength={8}
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Must be at least 8 characters
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Confirm New Password
+                  </label>
+                  <input
+                    type="password"
+                    value={passwordData.confirm_password}
+                    onChange={(e) => setPasswordData({ ...passwordData, confirm_password: e.target.value })}
+                    className="input"
+                    required
+                  />
+                </div>
+
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={isUpdatingPassword}
+                    className="btn btn-primary disabled:opacity-50"
+                  >
+                    {isUpdatingPassword ? 'Changing...' : 'Change Password'}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
 
         {/* Account Status */}
-        <Card sx={{ mt: 3, bgcolor: '#1a1f2e', borderRadius: 3 }}>
-          <CardContent sx={{ p: 4 }}>
-            <Typography variant="h6" sx={{ color: 'white', fontWeight: 600, mb: 3 }}>
-              Account Status
-            </Typography>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">Account Status</h2>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                {user?.is_verified ? (
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                ) : (
+                  <AlertCircle className="w-5 h-5 text-yellow-500" />
+                )}
+                <div>
+                  <p className="font-medium text-gray-900">Email Verification</p>
+                  <p className="text-sm text-gray-500">
+                    {user?.is_verified ? 'Verified' : 'Not verified'}
+                  </p>
+                </div>
+              </div>
+            </div>
 
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
-                <Alert severity="success" sx={{ bgcolor: 'rgba(67, 233, 123, 0.1)' }}>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    Email Verified ✓
-                  </Typography>
-                  <Typography variant="caption">
-                    Your email has been verified
-                  </Typography>
-                </Alert>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Alert severity="warning" sx={{ bgcolor: 'rgba(250, 112, 154, 0.1)' }}>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    KYC Pending
-                  </Typography>
-                  <Typography variant="caption">
-                    Complete your verification to unlock all features
-                  </Typography>
-                </Alert>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Box>
-    </UserLayout>
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                {user?.kyc_status === 'approved' ? (
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                ) : (
+                  <AlertCircle className="w-5 h-5 text-yellow-500" />
+                )}
+                <div>
+                  <p className="font-medium text-gray-900">KYC Verification</p>
+                  <p className="text-sm text-gray-500 capitalize">
+                    {user?.kyc_status?.replace('_', ' ') || 'Not submitted'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

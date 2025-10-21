@@ -26,6 +26,9 @@ stripe==11.3.0
 # Communication
 sendgrid==6.11.0
 
+# Cloud Storage
+boto3==1.35.80
+
 # WebSocket
 flask-socketio==5.4.1
 python-socketio==5.12.0

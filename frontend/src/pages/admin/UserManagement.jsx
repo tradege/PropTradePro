@@ -43,7 +43,6 @@ export default function UserManagement() {
       const response = await api.get('/admin/users');
       setUsers(response.data.users || response.data || []);
     } catch (error) {
-      console.error('Failed to load users:', error);
       alert('Failed to load users. Please check your connection and try again.');
       setUsers([]);
     } finally {
@@ -67,7 +66,6 @@ export default function UserManagement() {
         parent_id: null
       });
     } catch (error) {
-      console.error('Failed to create user:', error);
       alert('Failed to create user: ' + (error.response?.data?.message || error.message));
     }
   };

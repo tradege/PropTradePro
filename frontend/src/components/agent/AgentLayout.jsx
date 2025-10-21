@@ -45,7 +45,7 @@ export default function AgentLayout({ children }) {
           {/* Logo */}
           <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
             <Link to="/agent" className="text-xl font-bold text-primary-600">
-              PropTradePro
+              MarketEdgePros
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
@@ -123,7 +123,7 @@ export default function AgentLayout({ children }) {
             <Menu className="w-6 h-6" />
           </button>
           <Link to="/agent" className="text-xl font-bold text-primary-600">
-            PropTradePro
+            MarketEdgePros
           </Link>
           <div className="w-6" /> {/* Spacer for centering */}
         </div>

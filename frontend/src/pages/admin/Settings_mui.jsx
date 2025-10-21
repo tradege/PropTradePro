@@ -14,8 +14,8 @@ export default function Settings() {
             <CardContent>
               <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>General Settings</Typography>
               <Box display="flex" flexDirection="column" gap={2} mt={2}>
-                <TextField label="Platform Name" defaultValue="PropTradePro" fullWidth />
-                <TextField label="Support Email" defaultValue="support@proptradepro.com" fullWidth />
+                <TextField label="Platform Name" defaultValue="MarketEdgePros" fullWidth />
+                <TextField label="Support Email" defaultValue="support@marketedgepros.com" fullWidth />
                 <TextField label="Contact Phone" defaultValue="+1 (555) 123-4567" fullWidth />
                 <FormControlLabel control={<Switch defaultChecked />} label="Enable User Registration" />
                 <FormControlLabel control={<Switch defaultChecked />} label="Enable Email Notifications" />

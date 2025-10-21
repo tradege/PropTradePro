@@ -33,7 +33,6 @@ function AdminDashboard() {
       setStats(response.data);
       setError(null);
     } catch (err) {
-      console.error('Failed to fetch dashboard stats:', err);
       setError('Failed to load dashboard data');
     } finally {
       setLoading(false);

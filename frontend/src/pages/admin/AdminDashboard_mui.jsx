@@ -272,8 +272,6 @@ export default function AdminDashboard() {
             title="Recent Users"
             columns={userColumns}
             rows={recentUsers}
-            onView={(row) => console.log('View', row)}
-            onEdit={(row) => console.log('Edit', row)}
           />
         </Grid>
 
@@ -282,7 +280,6 @@ export default function AdminDashboard() {
             title="Recent Payments"
             columns={paymentColumns}
             rows={recentPayments}
-            onView={(row) => console.log('View', row)}
           />
         </Grid>
       </Grid>

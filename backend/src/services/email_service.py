@@ -30,7 +30,7 @@ class EmailService:
             return False
         
         if not from_email:
-            from_email = current_app.config.get('SENDGRID_FROM_EMAIL', 'noreply@proptradepro.com')
+            from_email = current_app.config.get('SENDGRID_FROM_EMAIL', 'info@marketedgepros.com')
         
         try:
             message = Mail(
@@ -73,21 +73,21 @@ class EmailService:
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>Welcome to PropTradePro! 🎉</h1>
+                        <h1>Welcome to MarketEdgePros! 🎉</h1>
                     </div>
                     <div class="content">
                         <h2>Hi {user.first_name},</h2>
-                        <p>Thank you for registering with PropTradePro! We're excited to have you on board.</p>
+                        <p>Thank you for registering with MarketEdgePros! We're excited to have you on board.</p>
                         <p>To complete your registration and verify your email address, please enter this verification code:</p>
                         <div class="code-box">
                             <div class="code">{code_or_token}</div>
                         </div>
                         <p style="color: #666; font-size: 14px;">This code will expire in 24 hours.</p>
-                        <p>If you didn't create an account with PropTradePro, please ignore this email.</p>
-                        <p>Best regards,<br>The PropTradePro Team</p>
+                        <p>If you didn't create an account with MarketEdgePros, please ignore this email.</p>
+                        <p>Best regards,<br>The MarketEdgePros Team</p>
                     </div>
                     <div class="footer">
-                        <p>© 2025 PropTradePro. All rights reserved.</p>
+                        <p>© 2025 MarketEdgePros. All rights reserved.</p>
                     </div>
                 </div>
             </body>
@@ -112,11 +112,11 @@ class EmailService:
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>Welcome to PropTradePro! 🎉</h1>
+                        <h1>Welcome to MarketEdgePros! 🎉</h1>
                     </div>
                     <div class="content">
                         <h2>Hi {user.first_name},</h2>
-                        <p>Thank you for registering with PropTradePro! We're excited to have you on board.</p>
+                        <p>Thank you for registering with MarketEdgePros! We're excited to have you on board.</p>
                         <p>To complete your registration and verify your email address, please click the button below:</p>
                         <p style="text-align: center;">
                             <a href="{verification_url}" class="button">Verify Email Address</a>
@@ -124,11 +124,11 @@ class EmailService:
                         <p>Or copy and paste this link into your browser:</p>
                         <p style="word-break: break-all; color: #667eea;">{verification_url}</p>
                         <p>This link will expire in 24 hours.</p>
-                        <p>If you didn't create an account with PropTradePro, please ignore this email.</p>
-                        <p>Best regards,<br>The PropTradePro Team</p>
+                        <p>If you didn't create an account with MarketEdgePros, please ignore this email.</p>
+                        <p>Best regards,<br>The MarketEdgePros Team</p>
                     </div>
                     <div class="footer">
-                        <p>© 2025 PropTradePro. All rights reserved.</p>
+                        <p>© 2025 MarketEdgePros. All rights reserved.</p>
                     </div>
                 </div>
             </body>
@@ -137,7 +137,7 @@ class EmailService:
         
         return EmailService._send_email(
             to_email=user.email,
-            subject='Verify Your Email - PropTradePro',
+            subject='Verify Your Email - MarketEdgePros',
             html_content=html_content
         )
     
@@ -171,7 +171,7 @@ class EmailService:
                     </div>
                     <div class="content">
                         <h2>Hi {user.first_name},</h2>
-                        <p>We received a request to reset your password for your PropTradePro account.</p>
+                        <p>We received a request to reset your password for your MarketEdgePros account.</p>
                         <p>Enter this code to reset your password:</p>
                         <div class="code-box">
                             <div class="code">{code_or_token}</div>
@@ -180,10 +180,10 @@ class EmailService:
                             <strong>⚠️ Security Notice:</strong> This code will expire in 15 minutes for your security.
                         </div>
                         <p>If you didn't request a password reset, please ignore this email and your password will remain unchanged.</p>
-                        <p>Best regards,<br>The PropTradePro Team</p>
+                        <p>Best regards,<br>The MarketEdgePros Team</p>
                     </div>
                     <div class="footer">
-                        <p>© 2025 PropTradePro. All rights reserved.</p>
+                        <p>© 2025 MarketEdgePros. All rights reserved.</p>
                     </div>
                 </div>
             </body>
@@ -213,7 +213,7 @@ class EmailService:
                     </div>
                     <div class="content">
                         <h2>Hi {user.first_name},</h2>
-                        <p>We received a request to reset your password for your PropTradePro account.</p>
+                        <p>We received a request to reset your password for your MarketEdgePros account.</p>
                         <p>Click the button below to reset your password:</p>
                         <p style="text-align: center;">
                             <a href="{reset_url}" class="button">Reset Password</a>
@@ -224,10 +224,10 @@ class EmailService:
                             <strong>⚠️ Security Notice:</strong> This link will expire in 15 minutes for your security.
                         </div>
                         <p>If you didn't request a password reset, please ignore this email and your password will remain unchanged.</p>
-                        <p>Best regards,<br>The PropTradePro Team</p>
+                        <p>Best regards,<br>The MarketEdgePros Team</p>
                     </div>
                     <div class="footer">
-                        <p>© 2025 PropTradePro. All rights reserved.</p>
+                        <p>© 2025 MarketEdgePros. All rights reserved.</p>
                     </div>
                 </div>
             </body>
@@ -236,7 +236,7 @@ class EmailService:
         
         return EmailService._send_email(
             to_email=user.email,
-            subject='Reset Your Password - PropTradePro',
+            subject='Reset Your Password - MarketEdgePros',
             html_content=html_content
         )
     
@@ -263,11 +263,11 @@ class EmailService:
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Welcome to PropTradePro! 🚀</h1>
+                    <h1>Welcome to MarketEdgePros! 🚀</h1>
                 </div>
                 <div class="content">
                     <h2>Hi {user.first_name},</h2>
-                    <p>Your email has been verified successfully! You're now ready to start your trading journey with PropTradePro.</p>
+                    <p>Your email has been verified successfully! You're now ready to start your trading journey with MarketEdgePros.</p>
                     
                     <div class="features">
                         <h3>What's Next?</h3>
@@ -282,10 +282,10 @@ class EmailService:
                     </p>
                     
                     <p>If you have any questions, our support team is here to help!</p>
-                    <p>Best regards,<br>The PropTradePro Team</p>
+                    <p>Best regards,<br>The MarketEdgePros Team</p>
                 </div>
                 <div class="footer">
-                    <p>© 2025 PropTradePro. All rights reserved.</p>
+                    <p>© 2025 MarketEdgePros. All rights reserved.</p>
                 </div>
             </div>
         </body>
@@ -294,7 +294,7 @@ class EmailService:
         
         return EmailService._send_email(
             to_email=user.email,
-            subject='Welcome to PropTradePro! 🚀',
+            subject='Welcome to MarketEdgePros! 🚀',
             html_content=html_content
         )
     
@@ -354,10 +354,10 @@ class EmailService:
                     </p>
                     
                     <p>Good luck with your trading!</p>
-                    <p>Best regards,<br>The PropTradePro Team</p>
+                    <p>Best regards,<br>The MarketEdgePros Team</p>
                 </div>
                 <div class="footer">
-                    <p>© 2025 PropTradePro. All rights reserved.</p>
+                    <p>© 2025 MarketEdgePros. All rights reserved.</p>
                 </div>
             </div>
         </body>

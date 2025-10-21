@@ -7,6 +7,7 @@ from src.models.user import User
 from src.utils.decorators import token_required, admin_required
 from datetime import datetime
 from sqlalchemy import desc, or_
+from src.services.storage_service import storage_service
 
 kyc_bp = Blueprint('kyc', __name__)
 
@@ -108,19 +109,29 @@ def upload_document(document_type):
                 'error': f'Invalid file type. Allowed: {", ".join(allowed_extensions)}'
             }), 400
         
-        # In a real implementation, you would:
-        # 1. Save the file to cloud storage (S3, etc.)
-        # 2. Store the file URL in the database
-        # 3. Create a Document record
+        # Upload file to DigitalOcean Spaces
+        upload_result = storage_service.upload_kyc_document(
+            file=file,
+            user_id=user.id,
+            document_type=document_type
+        )
         
-        # For now, we'll just update the user's KYC status fields
+        if not upload_result.get('success'):
+            return jsonify({
+                'error': upload_result.get('error', 'Failed to upload file')
+            }), 500
+        
+        # Update user's KYC status fields
         status_field = f'kyc_{document_type}_status'
         uploaded_field = f'kyc_{document_type}_uploaded_at'
+        url_field = f'kyc_{document_type}_url'
         
         if hasattr(user, status_field):
             setattr(user, status_field, 'pending')
         if hasattr(user, uploaded_field):
             setattr(user, uploaded_field, datetime.utcnow())
+        if hasattr(user, url_field):
+            setattr(user, url_field, upload_result['url'])
         
         # Update overall KYC status to pending if all required docs are uploaded
         # Required docs: id_proof, address_proof, selfie

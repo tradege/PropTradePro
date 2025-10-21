@@ -54,7 +54,6 @@ export default function AdminDashboard() {
         { id: 3, user: 'Bob Johnson', amount: 199, program: 'One Phase $50K', status: 'pending', date: '5 hours ago' },
       ]);
     } catch (error) {
-      console.error('Failed to load dashboard data:', error);
     } finally {
       setIsLoading(false);
     }

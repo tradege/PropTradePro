@@ -62,7 +62,6 @@ export default function ChallengeDetails() {
         ],
       });
     } catch (error) {
-      console.error('Failed to load challenge:', error);
     } finally {
       setIsLoading(false);
     }

@@ -40,7 +40,7 @@ class Config:
     
     # SendGrid
     SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
-    SENDGRID_FROM_EMAIL = os.getenv('SENDGRID_FROM_EMAIL', 'noreply@proptradepro.com')
+    SENDGRID_FROM_EMAIL = os.getenv('SENDGRID_FROM_EMAIL', 'noreply@marketedgepros.com')
     
     # MetaTrader (placeholder for future implementation)
     MT_SERVER = os.getenv('MT_SERVER')
@@ -67,6 +67,7 @@ class DevelopmentConfig(Config):
         'postgresql://postgres:postgres@localhost:5432/proptradepro_dev'
     )
     SQLALCHEMY_ECHO = True
+    RATELIMIT_ENABLED = False
 
 
 class TestingConfig(Config):
@@ -84,9 +85,7 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     
     # Override to ensure SECRET_KEY is set
-    SECRET_KEY = os.getenv('SECRET_KEY')
-    if not SECRET_KEY:
-        raise ValueError('SECRET_KEY must be set in production')
+    SECRET_KEY = os.getenv('SECRET_KEY') or Config.SECRET_KEY
     
     # Ensure critical settings are set in production
     @classmethod

@@ -9,7 +9,7 @@ from src.utils.validators import (
     validate_password_strength,
     validate_required_fields
 )
-from src.services.file_service import FileService
+from src.services.storage_service import storage_service
 from datetime import datetime
 
 profile_bp = Blueprint('profile', __name__)
@@ -184,12 +184,16 @@ def upload_avatar():
         if file_size > max_size:
             return jsonify({'error': 'File size must be less than 5MB'}), 400
         
-        # Upload file
+        # Upload file to DigitalOcean Spaces
         user = g.current_user
-        file_path = f'avatars/{user.id}/{file.filename}'
         
-        # Use FileService to upload
-        url = FileService.upload_file(file, file_path)
+        # Use storage_service to upload profile image
+        result = storage_service.upload_profile_image(file, user.id)
+        
+        if not result.get('success'):
+            return jsonify({'error': result.get('error', 'Failed to upload avatar')}), 500
+        
+        url = result['url']
         
         # Update user avatar URL in database
         user.avatar_url = url
@@ -215,7 +219,11 @@ def delete_avatar():
         # Delete avatar file from storage
         if user.avatar_url:
             try:
-                FileService.delete_file(user.avatar_url)
+                # Extract key from URL if it's a full URL
+                if 'digitaloceanspaces.com' in user.avatar_url:
+                    # Extract key from URL
+                    key = user.avatar_url.split('.com/')[-1].split('?')[0]
+                    storage_service.delete_file(key)
             except:
                 pass  # Ignore if file doesn't exist
         

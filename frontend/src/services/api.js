@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+const API_BASE_URL = 'http://146.190.21.113:5000/api/v1';
 
 // Create axios instance
 const api = axios.create({
@@ -130,8 +130,16 @@ export default api;
 export const profileAPI = {
   get: () => api.get('/profile'),
   update: (data) => api.put('/profile', data),
-  changePassword: (data) => api.post('/profile/change-password', data),
-  updatePreferences: (data) => api.put('/profile/preferences', data),
+  changePassword: (data) => api.put('/profile/password', data),
+  uploadAvatar: (file) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    return api.post('/profile/avatar', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+  deleteAvatar: () => api.delete('/profile/avatar'),
+  getStats: () => api.get('/profile/stats'),
 };
 
 // Admin API
@@ -171,8 +179,7 @@ export const kycAPI = {
   uploadDocument: (file, documentType) => {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('document_type', documentType);
-    return api.post('/kyc/upload', formData, {
+    return api.post(`/kyc/documents/${documentType}/upload`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },

@@ -35,7 +35,6 @@ export default function ProgramsManagement() {
       const response = await api.get('/programs');
       setPrograms(response.data.programs || []);
     } catch (error) {
-      console.error('Failed to load programs:', error);
       // Mock data for development
       setPrograms([
         {
@@ -97,7 +96,6 @@ export default function ProgramsManagement() {
       setShowModal(false);
       resetForm();
     } catch (error) {
-      console.error('Failed to save program:', error);
       alert('Failed to save program. Please try again.');
     }
   };
@@ -128,7 +126,6 @@ export default function ProgramsManagement() {
       await api.delete(`/programs/${id}`);
       loadPrograms();
     } catch (error) {
-      console.error('Failed to delete program:', error);
       alert('Failed to delete program. Please try again.');
     }
   };

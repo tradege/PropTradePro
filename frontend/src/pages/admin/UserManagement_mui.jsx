@@ -203,12 +203,10 @@ export default function UserManagement() {
   };
 
   const handleSave = () => {
-    console.log('Save user:', formData);
     handleCloseDialog();
   };
 
   const handleView = (user) => {
-    console.log('View user:', user);
   };
 
   const handleEdit = (user) => {
@@ -217,7 +215,6 @@ export default function UserManagement() {
 
   const handleDelete = (user) => {
     if (window.confirm(`Are you sure you want to delete ${user.name}?`)) {
-      console.log('Delete user:', user);
     }
   };
 

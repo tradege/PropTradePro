@@ -36,10 +36,8 @@ export default function MyChallenges() {
       setLoading(true);
       setError(null);
       const response = await programsAPI.getMyChallenges();
-      console.log('My Challenges Response:', response.data);
       setChallenges(response.data.challenges || []);
     } catch (err) {
-      console.error('Error fetching challenges:', err);
       setError(err.response?.data?.error || 'Failed to load challenges');
     } finally {
       setLoading(false);

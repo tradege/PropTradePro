@@ -112,7 +112,7 @@ export default function RiskDisclosure() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-white mb-4">PropTradePro Specific Risks</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">MarketEdgePros Specific Risks</h2>
             
             <h3 className="text-xl font-semibold text-white mb-3 mt-6">Challenge Evaluation</h3>
             <p className="text-gray-300 mb-4">
@@ -149,28 +149,28 @@ export default function RiskDisclosure() {
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">Educational Purpose</h2>
             <p className="text-gray-300">
-              Information provided by PropTradePro is for educational purposes only and should not be considered as financial advice. You should seek independent financial advice before making any trading decisions.
+              Information provided by MarketEdgePros is for educational purposes only and should not be considered as financial advice. You should seek independent financial advice before making any trading decisions.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">Regulatory Status</h2>
             <p className="text-gray-300">
-              PropTradePro is a proprietary trading firm and not a regulated financial institution. We do not provide investment advice or manage client funds. All trading is conducted on demo accounts during evaluation and on our proprietary capital for funded traders.
+              MarketEdgePros is a proprietary trading firm and not a regulated financial institution. We do not provide investment advice or manage client funds. All trading is conducted on demo accounts during evaluation and on our proprietary capital for funded traders.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">Acknowledgment</h2>
             <p className="text-gray-300 mb-4">
-              By using PropTradePro's services, you acknowledge that:
+              By using MarketEdgePros's services, you acknowledge that:
             </p>
             <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
               <li>You have read and understood this Risk Disclosure</li>
               <li>You understand the risks involved in trading</li>
               <li>You accept full responsibility for your trading decisions</li>
               <li>You are trading with money you can afford to lose</li>
-              <li>You will not hold PropTradePro liable for any losses</li>
+              <li>You will not hold MarketEdgePros liable for any losses</li>
             </ul>
           </section>
 
@@ -180,7 +180,7 @@ export default function RiskDisclosure() {
               If you have any questions about the risks of trading or our services, please contact us at:
             </p>
             <p className="text-gray-300 mt-4">
-              Email: support@proptradepro.com<br />
+              Email: support@marketedgepros.com<br />
               Address: 123 Trading Street, Financial District, New York, NY 10004
             </p>
           </section>
@@ -190,7 +190,7 @@ export default function RiskDisclosure() {
         <div className="mt-12 bg-orange-500/20 border-2 border-orange-500/50 rounded-xl p-6">
           <h3 className="text-lg font-bold text-orange-400 mb-3">Final Reminder</h3>
           <p className="text-gray-300">
-            Trading is not suitable for everyone. Only trade with money you can afford to lose. If you are unsure about trading, seek independent financial advice. PropTradePro is not responsible for any losses you may incur.
+            Trading is not suitable for everyone. Only trade with money you can afford to lose. If you are unsure about trading, seek independent financial advice. MarketEdgePros is not responsible for any losses you may incur.
           </p>
         </div>
 

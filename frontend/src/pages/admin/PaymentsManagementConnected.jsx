@@ -52,7 +52,6 @@ function PaymentsManagement() {
       }));
       setError(null);
     } catch (err) {
-      console.error('Failed to fetch payments:', err);
       setError('Failed to load payments');
     } finally {
       setLoading(false);

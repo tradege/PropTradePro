@@ -141,7 +141,6 @@ export default function ProgramDetails() {
       const response = await programsAPI.getById(id);
       setProgram(response.data);
     } catch (error) {
-      console.error('Failed to load program:', error);
     } finally {
       setIsLoading(false);
     }

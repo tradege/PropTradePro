@@ -213,7 +213,7 @@ export default function HowItWorks() {
         <div className="max-w-4xl mx-auto text-center px-4">
           <h2 className="text-3xl font-bold text-white mb-6">Ready to Get Started?</h2>
           <p className="text-xl text-white/90 mb-8">
-            Join thousands of traders who are already earning with PropTradePro.
+            Join thousands of traders who are already earning with MarketEdgePros.
           </p>
           <a
             href="/programs"

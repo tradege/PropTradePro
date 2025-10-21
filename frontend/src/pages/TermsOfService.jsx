@@ -30,17 +30,17 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">1. Acceptance of Terms</h2>
             <p className="text-gray-300 mb-4">
-              By accessing and using PropTradePro's services, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
+              By accessing and using MarketEdgePros's services, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
             </p>
             <p className="text-gray-300">
-              These Terms of Service constitute a legally binding agreement between you and PropTradePro. We reserve the right to modify these terms at any time, and such modifications shall be effective immediately upon posting.
+              These Terms of Service constitute a legally binding agreement between you and MarketEdgePros. We reserve the right to modify these terms at any time, and such modifications shall be effective immediately upon posting.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">2. Service Description</h2>
             <p className="text-gray-300 mb-4">
-              PropTradePro provides proprietary trading evaluation services and funded trading accounts to qualified traders. Our services include:
+              MarketEdgePros provides proprietary trading evaluation services and funded trading accounts to qualified traders. Our services include:
             </p>
             <ul className="list-disc list-inside text-gray-300 space-y-2 ml-4">
               <li>Trading challenge programs with various account sizes</li>
@@ -100,21 +100,21 @@ export default function TermsOfService() {
               Challenge fees are non-refundable once trading begins. Funded traders receive profit splits as outlined in their specific program. All fees are clearly disclosed before purchase.
             </p>
             <p className="text-gray-300">
-              Withdrawal requests are processed within 1-3 business days. PropTradePro reserves the right to verify trades and account activity before processing withdrawals.
+              Withdrawal requests are processed within 1-3 business days. MarketEdgePros reserves the right to verify trades and account activity before processing withdrawals.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">7. Intellectual Property</h2>
             <p className="text-gray-300">
-              All content, trademarks, and data on this platform, including but not limited to software, databases, text, graphics, icons, and hyperlinks, are the property of or licensed to PropTradePro and are protected by law.
+              All content, trademarks, and data on this platform, including but not limited to software, databases, text, graphics, icons, and hyperlinks, are the property of or licensed to MarketEdgePros and are protected by law.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">8. Limitation of Liability</h2>
             <p className="text-gray-300 mb-4">
-              PropTradePro shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of our services. Trading involves substantial risk, and you acknowledge that you may lose money.
+              MarketEdgePros shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of our services. Trading involves substantial risk, and you acknowledge that you may lose money.
             </p>
             <p className="text-gray-300">
               We do not guarantee profits or success. Past performance does not indicate future results.
@@ -131,7 +131,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">10. Governing Law</h2>
             <p className="text-gray-300">
-              These Terms of Service shall be governed by and construed in accordance with the laws of the jurisdiction in which PropTradePro is registered, without regard to its conflict of law provisions.
+              These Terms of Service shall be governed by and construed in accordance with the laws of the jurisdiction in which MarketEdgePros is registered, without regard to its conflict of law provisions.
             </p>
           </section>
 
@@ -141,7 +141,7 @@ export default function TermsOfService() {
               For questions about these Terms of Service, please contact us at:
             </p>
             <p className="text-gray-300 mt-4">
-              Email: legal@proptradepro.com<br />
+              Email: legal@marketedgepros.com<br />
               Address: 123 Trading Street, Financial District, New York, NY 10004
             </p>
           </section>

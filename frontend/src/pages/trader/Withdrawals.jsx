@@ -24,7 +24,6 @@ export default function Withdrawals() {
       const response = await api.get('/trader/withdrawals');
       setWithdrawals(response.data.withdrawals || []);
     } catch (error) {
-      console.error('Failed to load withdrawals:', error);
       // Mock data for development
       setWithdrawals([
         {
@@ -76,7 +75,6 @@ export default function Withdrawals() {
       setFormData({ amount: '', method: 'bank_transfer', accountDetails: '' });
       alert('Withdrawal request submitted successfully');
     } catch (error) {
-      console.error('Failed to submit withdrawal:', error);
       alert('Failed to submit withdrawal request. Please try again.');
     }
   };

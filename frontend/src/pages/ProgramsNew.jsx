@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, TrendingUp, Shield, Zap, ArrowRight } from 'lucide-react';
+import UserLayout from '../components/mui/UserLayout';
+import useAuthStore from '../store/authStore';
 
 export default function ProgramsNew() {
   const navigate = useNavigate();
+  const { user } = useAuthStore();
   const [programs, setPrograms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,13 +16,11 @@ export default function ProgramsNew() {
   }, []);
 
   const loadPrograms = async () => {
-    console.log('🔍 [ProgramsNew] Starting to load programs...');
     setIsLoading(true);
     setError(null);
     
     try {
-      const apiUrl = 'http://146.190.21.113:5000/api/v1/programs/';
-      console.log('📡 [ProgramsNew] Fetching from:', apiUrl);
+      const apiUrl = '/api/v1/programs/';
       
       const response = await fetch(apiUrl, {
         method: 'GET',
@@ -28,27 +29,16 @@ export default function ProgramsNew() {
         },
       });
       
-      console.log('📊 [ProgramsNew] Response status:', response.status);
-      console.log('📊 [ProgramsNew] Response ok:', response.ok);
-      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
       const data = await response.json();
-      console.log('✅ [ProgramsNew] Data received:', data);
-      console.log('📋 [ProgramsNew] Programs array:', data.programs);
-      console.log('📏 [ProgramsNew] Programs count:', data.programs?.length || 0);
-      
       setPrograms(data.programs || []);
-      console.log('✅ [ProgramsNew] Programs set successfully');
     } catch (error) {
-      console.error('❌ [ProgramsNew] Failed to load programs:', error);
-      console.error('❌ [ProgramsNew] Error message:', error.message);
       setError(error.message);
     } finally {
       setIsLoading(false);
-      console.log('🏁 [ProgramsNew] Loading finished');
     }
   };
 
@@ -98,6 +88,7 @@ export default function ProgramsNew() {
           <button
             onClick={loadPrograms}
             className="mt-4 px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+            aria-label="Retry loading programs"
           >
             Try Again
           </button>
@@ -106,13 +97,14 @@ export default function ProgramsNew() {
     );
   }
 
-  return (
+  // Content component
+  const content = (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-primary-600 to-secondary-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4" role="heading" aria-level="1">
               Choose Your Trading Challenge
             </h1>
             <p className="text-xl text-primary-100 max-w-2xl mx-auto">
@@ -134,6 +126,7 @@ export default function ProgramsNew() {
             <button
               onClick={loadPrograms}
               className="mt-4 px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+              aria-label="Reload programs list"
             >
               Reload
             </button>
@@ -250,5 +243,13 @@ export default function ProgramsNew() {
       </div>
     </div>
   );
+
+  // If user is logged in, wrap with UserLayout
+  if (user) {
+    return <UserLayout>{content}</UserLayout>;
+  }
+
+  // Otherwise, show standalone page
+  return content;
 }
 

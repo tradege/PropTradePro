@@ -127,7 +127,7 @@ export default function AdminLayout({ children }) {
           P
         </Avatar>
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
-          PropTradePro
+          MarketEdgePros
         </Typography>
       </Box>
 

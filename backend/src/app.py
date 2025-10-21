@@ -49,6 +49,18 @@ def create_app(config_name=None):
         )
         app.limiter = limiter
     
+    # Security Headers
+    @app.after_request
+    def add_security_headers(response):
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+        response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.marketedgepros.com"
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+        return response
+    
     # Configure logging
     logging.basicConfig(
         level=logging.INFO,
@@ -70,6 +82,7 @@ def create_app(config_name=None):
     from src.routes.reports import reports_bp
     from src.routes.hierarchy import hierarchy_bp
     from src.routes.crm import crm_bp
+    from src.routes.security import security_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/v1/auth')
     app.register_blueprint(users_bp, url_prefix='/api/v1/users')
@@ -85,13 +98,14 @@ def create_app(config_name=None):
     app.register_blueprint(reports_bp, url_prefix='/api/v1/reports')
     app.register_blueprint(hierarchy_bp, url_prefix='/api/v1/hierarchy')
     app.register_blueprint(crm_bp, url_prefix='/api/v1/crm')
+    app.register_blueprint(security_bp, url_prefix='/api/v1/security')
     
     # Health check endpoint
     @app.route('/health', methods=['GET'])
     def health_check():
         return jsonify({
             'status': 'healthy',
-            'service': 'PropTradePro API',
+            'service': 'MarketEdgePros API',
             'version': '1.0.0'
         }), 200
     
@@ -99,7 +113,7 @@ def create_app(config_name=None):
     @app.route('/', methods=['GET'])
     def index():
         return jsonify({
-            'message': 'PropTradePro API',
+            'message': 'MarketEdgePros API',
             'version': '1.0.0',
             'endpoints': {
                 'health': '/health',

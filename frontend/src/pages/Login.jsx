@@ -37,7 +37,6 @@ export default function Login() {
         navigate('/dashboard');
       }
     } catch (err) {
-      console.error('Login error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -51,7 +50,6 @@ export default function Login() {
       await login2FA(userId, twoFactorToken);
       navigate('/dashboard');
     } catch (err) {
-      console.error('2FA error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -132,7 +130,7 @@ export default function Login() {
                 <LogIn className="w-8 h-8 text-blue-600" />
               </div>
               <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
-              <p className="text-gray-600 mt-2">Sign in to your PropTradePro account</p>
+              <p className="text-gray-600 mt-2">Sign in to your MarketEdgePros account</p>
             </div>
 
             {error && (

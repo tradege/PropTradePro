@@ -1,57 +1,57 @@
-import { useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import useAuthStore from './store/authStore';
 import Notification from './components/Notification';
 
-// Auth Pages
-import Login from './pages/Login';
-import Register from './pages/Register';
-import VerifyEmail from './pages/VerifyEmail';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
+// Auth Pages (Lazy Loaded)
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 
-// Public Pages
-import HomePage from './pages/NewHomePage';
-import Programs from './pages/ProgramsNew';
-import ProgramDetails from './pages/ProgramDetails';
-import OnePhaseChallenge from './pages/OnePhaseChallenge';
-import TwoPhaseChallenge from './pages/TwoPhaseChallenge';
-import InstantFunding from './pages/InstantFunding';
-import AboutUs from './pages/AboutUs';
-import HowItWorks from './pages/HowItWorks';
-import FAQ from './pages/FAQ';
-import Contact from './pages/Contact';
-import TermsOfService from './pages/TermsOfService';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import RiskDisclosure from './pages/RiskDisclosure';
+// Public Pages (Lazy Loaded)
+const HomePage = lazy(() => import('./pages/NewHomePage'));
+const Programs = lazy(() => import('./pages/ProgramsNew'));
+const ProgramDetails = lazy(() => import('./pages/ProgramDetails'));
+const OnePhaseChallenge = lazy(() => import('./pages/OnePhaseChallenge'));
+const TwoPhaseChallenge = lazy(() => import('./pages/TwoPhaseChallenge'));
+const InstantFunding = lazy(() => import('./pages/InstantFunding'));
+const AboutUs = lazy(() => import('./pages/AboutUs'));
+const HowItWorks = lazy(() => import('./pages/HowItWorks'));
+const FAQ = lazy(() => import('./pages/FAQ'));
+const Contact = lazy(() => import('./pages/Contact'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const RiskDisclosure = lazy(() => import('./pages/RiskDisclosure'));
 
-// Shared Pages
-import Dashboard from './pages/Dashboard_mui';
-import KYC from './pages/KYC';
-import Profile from './pages/user/Profile_mui';
-import MyChallenges from './pages/user/MyChallenges';
-import ChallengeDetails from './pages/ChallengeDetails';
+// Shared Pages (Lazy Loaded)
+const Dashboard = lazy(() => import('./pages/Dashboard_mui'));
+const KYC = lazy(() => import('./pages/KYC'));
+const Profile = lazy(() => import('./pages/user/Profile_mui'));
+const MyChallenges = lazy(() => import('./pages/user/MyChallenges'));
+const ChallengeDetails = lazy(() => import('./pages/ChallengeDetails'));
 
-// Admin Pages
-import AdminLayout from './components/mui/AdminLayout';
-import AdminDashboard from './pages/admin/AdminDashboardConnected';
-import UserManagement from './pages/admin/UserManagementConnected';
-import ProgramsManagement from './pages/admin/ProgramsManagement_mui';
-import PaymentsManagement from './pages/admin/PaymentsManagementConnected';
-import KYCApproval from './pages/admin/KYCApprovalConnected';
-import Settings from './pages/admin/Settings_mui';
+// Admin Pages (Lazy Loaded)
+const AdminLayout = lazy(() => import('./components/mui/AdminLayout'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboardConnected'));
+const UserManagement = lazy(() => import('./pages/admin/UserManagementConnected'));
+const ProgramsManagement = lazy(() => import('./pages/admin/ProgramsManagement_mui'));
+const PaymentsManagement = lazy(() => import('./pages/admin/PaymentsManagementConnected'));
+const KYCApproval = lazy(() => import('./pages/admin/KYCApprovalConnected'));
+const Settings = lazy(() => import('./pages/admin/Settings_mui'));
 
-// Agent Pages
-import AgentDashboard from './pages/agent/AgentDashboard';
-import TradersManagement from './pages/agent/TradersManagement';
-import Commissions from './pages/agent/Commissions';
-import Reports from './pages/agent/Reports';
+// Agent Pages (Lazy Loaded)
+const AgentDashboard = lazy(() => import('./pages/agent/AgentDashboard'));
+const TradersManagement = lazy(() => import('./pages/agent/TradersManagement'));
+const Commissions = lazy(() => import('./pages/agent/Commissions'));
+const Reports = lazy(() => import('./pages/agent/Reports'));
 
-// Trader Pages
-import TraderDashboard from './pages/user/UserDashboard_mui';
-import TradingHistory from './pages/trader/TradingHistory';
-import Withdrawals from './pages/trader/Withdrawals';
-import Documents from './pages/trader/Documents';
+// Trader Pages (Lazy Loaded)
+const TraderDashboard = lazy(() => import('./pages/user/UserDashboard_mui'));
+const TradingHistory = lazy(() => import('./pages/trader/TradingHistory'));
+const Withdrawals = lazy(() => import('./pages/trader/Withdrawals'));
+const Documents = lazy(() => import('./pages/user/Documents'));
 
 // Guards
 import RoleGuard from './components/guards/RoleGuard';
@@ -110,7 +110,15 @@ function App() {
   return (
     <BrowserRouter>
       <Notification />
-      <Routes>
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-slate-900">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            <p className="text-gray-300 mt-4">Loading...</p>
+          </div>
+        </div>
+      }>
+        <Routes>
         {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/home" element={<HomePage />} />
@@ -186,6 +194,22 @@ function App() {
           element={
             <ProtectedRoute>
               <ChallengeDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/documents"
+          element={
+            <ProtectedRoute>
+              <Documents />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />
@@ -364,6 +388,7 @@ function App() {
           }
         />
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

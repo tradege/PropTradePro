@@ -17,7 +17,6 @@ export default function HomePage() {
       const response = await axios.get(`${API_URL}/api/v1/programs/`);
       setPrograms(response.data.programs || []);
     } catch (error) {
-      console.error('Error fetching programs:', error);
     } finally {
       setLoading(false);
     }
@@ -34,7 +33,7 @@ export default function HomePage() {
               Trade with <span className="text-blue-400">Confidence</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-              Join thousands of traders who trust PropTradePro to fund their trading careers. 
+              Join thousands of traders who trust MarketEdgePros to fund their trading careers. 
               Get access to capital, keep up to 90% of profits, and trade with confidence.
             </p>
             <div className="flex gap-4 justify-center">
@@ -149,7 +148,7 @@ export default function HomePage() {
       <div className="bg-gray-800/50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Why Choose PropTradePro?</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">Why Choose MarketEdgePros?</h2>
             <p className="text-xl text-gray-400">Everything you need to succeed as a trader</p>
           </div>
 
@@ -216,7 +215,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-white font-bold text-lg mb-4">PropTradePro</h3>
+              <h3 className="text-white font-bold text-lg mb-4">MarketEdgePros</h3>
               <p className="text-gray-400 text-sm">
                 Professional prop trading platform for ambitious traders.
               </p>
@@ -247,7 +246,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
-            <p>&copy; {new Date().getFullYear()} PropTradePro. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} MarketEdgePros. All rights reserved.</p>
           </div>
         </div>
       </footer>

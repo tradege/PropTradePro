@@ -13,21 +13,12 @@ export default function Programs() {
   }, []);
 
   const loadPrograms = async () => {
-    console.log('🔍 Starting to load programs...');
     try {
-      console.log('📡 Calling API...');
       const response = await programsAPI.getAll();
-      console.log('✅ API Response:', response);
-      console.log('📦 Response data:', response.data);
-      console.log('📋 Programs array:', response.data.programs);
       setPrograms(response.data.programs || []);
-      console.log('✅ Programs set successfully');
     } catch (error) {
-      console.error('❌ Failed to load programs:', error);
-      console.error('Error details:', error.response);
     } finally {
       setIsLoading(false);
-      console.log('🏁 Loading finished');
     }
   };
 

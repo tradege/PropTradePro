@@ -15,7 +15,7 @@ export default function Footer() {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xl">P</span>
               </div>
-              <span className="text-white font-bold text-xl">PropTradePro</span>
+              <span className="text-white font-bold text-xl">MarketEdgePros</span>
             </Link>
             <p className="text-gray-400 text-sm mb-4">
               Professional prop trading platform for ambitious traders.
@@ -121,9 +121,9 @@ export default function Footer() {
             <div className="mt-6">
               <h4 className="text-white font-semibold mb-3 text-sm">Contact</h4>
               <div className="space-y-2">
-                <a href="mailto:support@proptradepro.com" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm">
+                <a href="mailto:support@marketedgepros.com" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm">
                   <Mail className="w-4 h-4" />
-                  support@proptradepro.com
+                  support@marketedgepros.com
                 </a>
                 <a href="tel:+1234567890" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm">
                   <Phone className="w-4 h-4" />
@@ -138,7 +138,7 @@ export default function Footer() {
         <div className="border-t border-white/10 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © {currentYear} PropTradePro. All rights reserved.
+              © {currentYear} MarketEdgePros. All rights reserved.
             </p>
             <p className="text-gray-400 text-sm mt-4 md:mt-0">
               Trading involves substantial risk. Only trade with money you can afford to lose.

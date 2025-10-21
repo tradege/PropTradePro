@@ -43,7 +43,6 @@ export default function Register() {
       // Navigate to verify email page with email in state
       navigate('/verify-email', { state: { email: formData.email } });
     } catch (err) {
-      console.error('Registration error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -59,7 +58,7 @@ export default function Register() {
                 <UserPlus className="w-8 h-8 text-blue-600" />
               </div>
               <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
-              <p className="text-gray-600 mt-2">Start your trading journey with PropTradePro</p>
+              <p className="text-gray-600 mt-2">Start your trading journey with MarketEdgePros</p>
             </div>
 
             {error && (

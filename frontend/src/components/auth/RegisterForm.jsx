@@ -81,7 +81,7 @@ export default function RegisterForm() {
               <UserPlus className="w-8 h-8 text-primary-600" />
             </div>
             <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
-            <p className="text-gray-600 mt-2">Start your trading journey with PropTradePro</p>
+            <p className="text-gray-600 mt-2">Start your trading journey with MarketEdgePros</p>
           </div>
 
           {error && (

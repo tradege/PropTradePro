@@ -21,7 +21,6 @@ export default function NewPrograms() {
       const response = await axios.get(`${API_URL}/api/v1/programs/`);
       setPrograms(response.data.programs || []);
     } catch (error) {
-      console.error('Error fetching programs:', error);
     } finally {
       setLoading(false);
     }
@@ -227,7 +226,7 @@ export default function NewPrograms() {
       <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold text-white mb-4">Ready to Get Funded?</h2>
-          <p className="text-xl text-blue-100 mb-8">Start your trading journey today with PropTradePro</p>
+          <p className="text-xl text-blue-100 mb-8">Start your trading journey today with MarketEdgePros</p>
           <Link 
             to="/register" 
             className="inline-block px-8 py-4 bg-white text-blue-600 rounded-lg font-bold text-lg hover:bg-gray-100 transition transform hover:scale-105"

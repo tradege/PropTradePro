@@ -12,7 +12,7 @@ export default function AboutUs() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">PropTradePro</span>
+              About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">MarketEdgePros</span>
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               Empowering traders worldwide with capital, technology, and support to achieve their trading goals.
@@ -27,7 +27,7 @@ export default function AboutUs() {
           <div>
             <h2 className="text-3xl font-bold text-white mb-6">Our Mission</h2>
             <p className="text-gray-300 text-lg mb-4">
-              At PropTradePro, we believe that talented traders deserve access to substantial capital to maximize their potential. Our mission is to identify, fund, and support skilled traders who demonstrate consistent profitability and risk management.
+              At MarketEdgePros, we believe that talented traders deserve access to substantial capital to maximize their potential. Our mission is to identify, fund, and support skilled traders who demonstrate consistent profitability and risk management.
             </p>
             <p className="text-gray-300 text-lg">
               We provide a transparent, fair, and technology-driven platform that removes traditional barriers to professional trading, allowing traders to focus on what they do best—trading.
@@ -96,7 +96,7 @@ export default function AboutUs() {
 
       {/* Why Choose Us */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-3xl font-bold text-white text-center mb-12">Why Choose PropTradePro?</h2>
+        <h2 className="text-3xl font-bold text-white text-center mb-12">Why Choose MarketEdgePros?</h2>
         <div className="grid md:grid-cols-2 gap-8">
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
             <h3 className="text-xl font-bold text-white mb-3">🚀 Fast Funding</h3>
@@ -142,7 +142,7 @@ export default function AboutUs() {
         <div className="max-w-4xl mx-auto text-center px-4">
           <h2 className="text-3xl font-bold text-white mb-6">Ready to Start Your Trading Journey?</h2>
           <p className="text-xl text-white/90 mb-8">
-            Join thousands of traders who have already been funded through PropTradePro.
+            Join thousands of traders who have already been funded through MarketEdgePros.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a

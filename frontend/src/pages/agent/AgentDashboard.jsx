@@ -57,7 +57,6 @@ export default function AgentDashboard() {
         { id: 3, trader: 'Bob Wilson', amount: 199, type: 'enrollment', status: 'pending', date: '1 week ago' },
       ]);
     } catch (error) {
-      console.error('Failed to load dashboard data:', error);
     } finally {
       setIsLoading(false);
     }

@@ -43,7 +43,6 @@ export default function Reports() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       // Data is already set in state
     } catch (error) {
-      console.error('Failed to load report data:', error);
     } finally {
       setIsLoading(false);
     }

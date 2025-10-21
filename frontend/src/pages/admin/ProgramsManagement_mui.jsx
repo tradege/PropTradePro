@@ -124,13 +124,11 @@ export default function ProgramsManagement() {
   };
 
   const handleSave = () => {
-    console.log('Save program:', formData);
     handleCloseDialog();
   };
 
   const handleDelete = (program) => {
     if (window.confirm(`Are you sure you want to delete ${program.name}?`)) {
-      console.log('Delete program:', program);
     }
   };
 
@@ -314,7 +312,6 @@ export default function ProgramsManagement() {
                   <Button
                     size="small"
                     startIcon={<Visibility />}
-                    onClick={() => console.log('View', program)}
                   >
                     View
                   </Button>

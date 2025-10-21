@@ -30,7 +30,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">1. Introduction</h2>
             <p className="text-gray-300">
-              PropTradePro ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services. Please read this policy carefully.
+              MarketEdgePros ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services. Please read this policy carefully.
             </p>
           </section>
 
@@ -125,7 +125,7 @@ export default function PrivacyPolicy() {
               <li><strong>Opt-Out:</strong> Unsubscribe from marketing communications</li>
             </ul>
             <p className="text-gray-300 mt-4">
-              To exercise these rights, please contact us at privacy@proptradepro.com.
+              To exercise these rights, please contact us at privacy@marketedgepros.com.
             </p>
           </section>
 
@@ -179,7 +179,7 @@ export default function PrivacyPolicy() {
               If you have questions about this Privacy Policy, please contact us at:
             </p>
             <p className="text-gray-300 mt-4">
-              Email: privacy@proptradepro.com<br />
+              Email: privacy@marketedgepros.com<br />
               Address: 123 Trading Street, Financial District, New York, NY 10004
             </p>
           </section>
