@@ -92,7 +92,7 @@ const useAuthStore = create((set, get) => ({
         document.addEventListener(event, get().updateActivity);
       });
 
-      return { success: true };
+      return { success: true, user: response.data.user };
     } catch (error) {
       const errorMessage = error.response?.data?.error || 'Login failed';
       set({ error: errorMessage });
@@ -123,7 +123,7 @@ const useAuthStore = create((set, get) => ({
         document.addEventListener(event, get().updateActivity);
       });
 
-      return { success: true };
+      return { success: true, user: response.data.user };
     } catch (error) {
       const errorMessage = error.response?.data?.error || '2FA verification failed';
       set({ error: errorMessage });
