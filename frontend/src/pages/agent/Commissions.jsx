@@ -25,55 +25,9 @@ export default function Commissions() {
       setCommissions(response.data.commissions || []);
       calculateStats(response.data.commissions || []);
     } catch (error) {
-      // Mock data for development
-      const mockCommissions = [
-        {
-          id: 1,
-          trader: { name: 'John Trader', email: 'john@example.com' },
-          type: 'enrollment',
-          amount: 299,
-          rate: 30,
-          status: 'paid',
-          program: 'Two Phase $100K',
-          date: '2024-10-15T10:30:00Z',
-          payout_date: '2024-10-16T10:30:00Z',
-        },
-        {
-          id: 2,
-          trader: { name: 'Jane Smith', email: 'jane@example.com' },
-          type: 'profit_share',
-          amount: 450,
-          rate: 10,
-          status: 'paid',
-          program: 'One Phase $50K',
-          date: '2024-10-14T09:15:00Z',
-          payout_date: '2024-10-15T09:15:00Z',
-        },
-        {
-          id: 3,
-          trader: { name: 'Bob Wilson', email: 'bob@example.com' },
-          type: 'enrollment',
-          amount: 199,
-          rate: 30,
-          status: 'pending',
-          program: 'Instant Funding $200K',
-          date: '2024-10-17T14:20:00Z',
-          payout_date: null,
-        },
-        {
-          id: 4,
-          trader: { name: 'Alice Brown', email: 'alice@example.com' },
-          type: 'renewal',
-          amount: 150,
-          rate: 20,
-          status: 'paid',
-          program: 'Two Phase $100K',
-          date: '2024-10-10T11:45:00Z',
-          payout_date: '2024-10-11T11:45:00Z',
-        },
-      ];
-      setCommissions(mockCommissions);
-      calculateStats(mockCommissions);
+      console.error('Error loading commissions:', error);
+      setCommissions([]);
+      calculateStats([]);
     } finally {
       setIsLoading(false);
     }

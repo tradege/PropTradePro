@@ -20,26 +20,8 @@ export default function TradingHistory() {
       const response = await api.get('/trader/trades');
       setTrades(response.data.trades || []);
     } catch (error) {
-      // Mock data for development
-      const mockTrades = [];
-      for (let i = 1; i <= 50; i++) {
-        const isProfit = Math.random() > 0.3;
-        mockTrades.push({
-          id: i,
-          symbol: ['EUR/USD', 'GBP/USD', 'USD/JPY', 'AUD/USD', 'USD/CAD'][Math.floor(Math.random() * 5)],
-          type: Math.random() > 0.5 ? 'buy' : 'sell',
-          lots: (Math.random() * 0.5 + 0.1).toFixed(2),
-          openPrice: (1.0 + Math.random() * 0.2).toFixed(5),
-          closePrice: (1.0 + Math.random() * 0.2).toFixed(5),
-          openTime: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
-          closeTime: new Date(Date.now() - Math.random() * 29 * 24 * 60 * 60 * 1000).toISOString(),
-          profit: isProfit ? Math.floor(Math.random() * 300 + 50) : -Math.floor(Math.random() * 150 + 30),
-          pips: isProfit ? Math.floor(Math.random() * 60 + 10) : -Math.floor(Math.random() * 40 + 10),
-          commission: -Math.floor(Math.random() * 10 + 2),
-          swap: Math.floor(Math.random() * 5 - 2),
-        });
-      }
-      setTrades(mockTrades.sort((a, b) => new Date(b.closeTime) - new Date(a.closeTime)));
+      console.error('Error loading trades:', error);
+      setTrades([]);
     } finally {
       setIsLoading(false);
     }

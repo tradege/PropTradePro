@@ -59,7 +59,7 @@ function AdminDashboard() {
     return null;
   }
 
-  // Calculate trends (mock for now - would need historical data)
+  // Calculate trends from stats data
   const statsData = [
     {
       title: 'Total Users',
