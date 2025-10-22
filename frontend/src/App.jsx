@@ -28,6 +28,7 @@ const RiskDisclosure = lazy(() => import('./pages/RiskDisclosure'));
 
 // Shared Pages (Lazy Loaded)
 const Dashboard = lazy(() => import('./pages/Dashboard_mui'));
+import RoleBasedDashboard from './components/RoleBasedDashboard';
 const KYC = lazy(() => import('./pages/KYC'));
 const Profile = lazy(() => import('./pages/user/Profile_mui'));
 const MyChallenges = lazy(() => import('./pages/user/MyChallenges'));
@@ -59,8 +60,8 @@ const Documents = lazy(() => import('./pages/user/Documents'));
 import RoleGuard from './components/guards/RoleGuard';
 
 // Protected Route Component
-function ProtectedRoute({ children }) {
-  const { isAuthenticated, isLoading } = useAuthStore();
+function ProtectedRoute({ children, adminOnly = false, userOnly = false }) {
+  const { isAuthenticated, isLoading, user } = useAuthStore();
 
   if (isLoading) {
     return (
@@ -75,6 +76,14 @@ function ProtectedRoute({ children }) {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Check if admin trying to access user-only pages
+  const adminRoles = ['supermaster', 'admin_master', 'master', 'super_admin', 'admin'];
+  const isAdmin = user && adminRoles.includes(user.role);
+  
+  if (userOnly && isAdmin) {
+    return <Navigate to="/admin" replace />;
   }
 
   return children;
@@ -164,7 +173,7 @@ function App() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <RoleBasedDashboard />
             </ProtectedRoute>
           }
         />
@@ -179,7 +188,7 @@ function App() {
         <Route
           path="/profile"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute userOnly={true}>
               <Profile />
             </ProtectedRoute>
           }
@@ -187,7 +196,7 @@ function App() {
         <Route
           path="/challenges"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute userOnly={true}>
               <MyChallenges />
             </ProtectedRoute>
           }
@@ -195,7 +204,7 @@ function App() {
         <Route
           path="/challenges/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute userOnly={true}>
               <ChallengeDetails />
             </ProtectedRoute>
           }
@@ -203,7 +212,7 @@ function App() {
         <Route
           path="/documents"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute userOnly={true}>
               <Documents />
             </ProtectedRoute>
           }
@@ -211,7 +220,7 @@ function App() {
         <Route
           path="/settings"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute userOnly={true}>
               <Profile />
             </ProtectedRoute>
           }
