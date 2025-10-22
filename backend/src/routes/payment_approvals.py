@@ -13,8 +13,8 @@ bp = Blueprint('payment_approvals', __name__, url_prefix='/api/v1/payment-approv
 
 @bp.route('/pending', methods=['GET'])
 @token_required
-@role_required(['supermaster'])
-def get_pending_approvals(current_user):
+@role_required('supermaster')
+def get_pending_approvals():
     """
     Get all pending payment approval requests (Super Admin only)
     """
@@ -73,8 +73,8 @@ def get_pending_approvals(current_user):
 
 @bp.route('/my-requests', methods=['GET'])
 @token_required
-@role_required(['supermaster', 'master'])
-def get_my_requests(current_user):
+@role_required('supermaster', 'master')
+def get_my_requests():
     """
     Get all approval requests created by current user (Master/Admin only)
     """
@@ -121,8 +121,8 @@ def get_my_requests(current_user):
 
 @bp.route('/create', methods=['POST'])
 @token_required
-@role_required(['supermaster', 'master'])
-def create_approval_request(current_user):
+@role_required('supermaster', 'master')
+def create_approval_request():
     """
     Create a new payment approval request
     
@@ -178,8 +178,8 @@ def create_approval_request(current_user):
 
 @bp.route('/<int:request_id>/approve', methods=['POST'])
 @token_required
-@role_required(['supermaster'])
-def approve_request(current_user, request_id):
+@role_required('supermaster')
+def approve_request(request_id):
     """
     Approve a payment approval request (Super Admin only)
     
@@ -218,8 +218,8 @@ def approve_request(current_user, request_id):
 
 @bp.route('/<int:request_id>/reject', methods=['POST'])
 @token_required
-@role_required(['supermaster'])
-def reject_request(current_user, request_id):
+@role_required('supermaster')
+def reject_request(request_id):
     """
     Reject a payment approval request (Super Admin only)
     
@@ -344,8 +344,8 @@ def get_request_details(current_user, request_id):
 
 @bp.route('/stats', methods=['GET'])
 @token_required
-@role_required(['supermaster'])
-def get_approval_stats(current_user):
+@role_required('supermaster')
+def get_approval_stats():
     """
     Get statistics about payment approvals (Super Admin only)
     """
