@@ -84,6 +84,7 @@ def create_app(config_name=None):
     from src.routes.crm import crm_bp
     from src.routes.security import security_bp
     from src.routes.payment_approvals import bp as payment_approvals_bp
+    from src.routes.chat import chat_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/v1/auth')
     app.register_blueprint(users_bp, url_prefix='/api/v1/users')
@@ -101,6 +102,7 @@ def create_app(config_name=None):
     app.register_blueprint(crm_bp, url_prefix='/api/v1/crm')
     app.register_blueprint(security_bp, url_prefix='/api/v1/security')
     app.register_blueprint(payment_approvals_bp)
+    app.register_blueprint(chat_bp, url_prefix='/api/v1/chat')
     
     # Health check endpoint
     @app.route('/health', methods=['GET'])
@@ -132,7 +134,8 @@ def create_app(config_name=None):
                 'reports': '/api/v1/reports',
                 'hierarchy': '/api/v1/hierarchy',
                 'crm': '/api/v1/crm',
-                'payment_approvals': '/api/v1/payment-approvals'
+                'payment_approvals': '/api/v1/payment-approvals',
+                'chat': '/api/v1/chat'
             }
         }), 200
     
