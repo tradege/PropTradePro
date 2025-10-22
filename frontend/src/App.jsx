@@ -91,7 +91,7 @@ function ProtectedRoute({ children, adminOnly = false, userOnly = false }) {
 
 // Public Route Component (redirect if already logged in)
 function PublicRoute({ children }) {
-  const { isAuthenticated, isLoading } = useAuthStore();
+  const { isAuthenticated, isLoading, user } = useAuthStore();
 
   if (isLoading) {
     return (
@@ -104,8 +104,20 @@ function PublicRoute({ children }) {
     );
   }
 
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+  if (isAuthenticated && user) {
+    // Redirect based on user role
+    const adminRoles = ['supermaster', 'admin_master', 'master', 'super_admin', 'admin'];
+    
+    if (adminRoles.includes(user.role)) {
+      return <Navigate to="/admin" replace />;
+    }
+    
+    if (user.role === 'agent') {
+      return <Navigate to="/agent" replace />;
+    }
+    
+    // Regular users go to home
+    return <Navigate to="/" replace />;
   }
 
   return children;
