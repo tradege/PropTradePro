@@ -176,7 +176,9 @@ class Challenge(db.Model, TimestampMixin):
     addons = db.Column(JSONB, default=[])
     
     # Relationships
-    user = db.relationship('User', back_populates='challenges')
+    user = db.relationship('User', back_populates='challenges', foreign_keys=[user_id])
+    creator = db.relationship('User', back_populates='created_challenges', foreign_keys=[created_by])
+    approver = db.relationship('User', foreign_keys=[approved_by])
     program = db.relationship('TradingProgram', back_populates='challenges')
     
     def __repr__(self):

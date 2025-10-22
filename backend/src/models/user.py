@@ -89,7 +89,8 @@ class User(db.Model, TimestampMixin):
     
     # Relationships
     tenant = db.relationship('Tenant', back_populates='users')
-    challenges = db.relationship('Challenge', back_populates='user', lazy='dynamic')
+    challenges = db.relationship('Challenge', back_populates='user', lazy='dynamic', foreign_keys='Challenge.user_id')
+    created_challenges = db.relationship('Challenge', back_populates='creator', lazy='dynamic', foreign_keys='Challenge.created_by')
     
     # Hierarchy Relationships
     parent = db.relationship('User', remote_side=[id], backref='children', foreign_keys=[parent_id])
