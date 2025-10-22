@@ -7,6 +7,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from src.config import get_config
 from src.database import db, init_db
+from src.middleware.tenant_middleware import init_tenant_middleware
 import logging
 
 
@@ -24,6 +25,9 @@ def create_app(config_name=None):
     
     # Initialize extensions
     init_db(app)
+    
+    # Initialize tenant middleware
+    init_tenant_middleware(app)
     
     # Enable CORS
     cors_origins = app.config.get('CORS_ORIGINS', '*')
@@ -85,6 +89,7 @@ def create_app(config_name=None):
     from src.routes.security import security_bp
     from src.routes.payment_approvals import bp as payment_approvals_bp
     from src.routes.chat import chat_bp
+    from src.routes.tenants import tenants_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/v1/auth')
     app.register_blueprint(users_bp, url_prefix='/api/v1/users')
@@ -103,6 +108,7 @@ def create_app(config_name=None):
     app.register_blueprint(security_bp, url_prefix='/api/v1/security')
     app.register_blueprint(payment_approvals_bp)
     app.register_blueprint(chat_bp, url_prefix='/api/v1/chat')
+    app.register_blueprint(tenants_bp, url_prefix='/api/v1/tenants')
     
     # Health check endpoint
     @app.route('/health', methods=['GET'])
@@ -135,7 +141,8 @@ def create_app(config_name=None):
                 'hierarchy': '/api/v1/hierarchy',
                 'crm': '/api/v1/crm',
                 'payment_approvals': '/api/v1/payment-approvals',
-                'chat': '/api/v1/chat'
+                'chat': '/api/v1/chat',
+                'tenants': '/api/v1/tenants'
             }
         }), 200
     
