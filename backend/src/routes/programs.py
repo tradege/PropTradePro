@@ -156,6 +156,9 @@ def create_addon(program_id):
 @token_required
 def purchase_program(program_id):
     """Purchase a trading program"""
+    from src.models import User, PaymentApprovalRequest
+    from src.services.payment_approval_service import PaymentApprovalService
+    
     program = TradingProgram.query.get_or_404(program_id)
     data = request.get_json()
     
@@ -169,30 +172,83 @@ def purchase_program(program_id):
         # Calculate total price
         total_price = program.calculate_total_price(addon_ids)
         
+        # Get payment type (default: credit_card)
+        payment_type = data.get('payment_type', 'credit_card')
+        
+        # Get user_id (for Master/Admin creating for someone else)
+        user_id = data.get('user_id', g.current_user.id)
+        
+        # Validate payment type permissions
+        if payment_type == 'cash':
+            if not PaymentApprovalService.can_use_cash_payment(g.current_user):
+                return jsonify({
+                    'error': 'Only Super Admin and Masters can use cash payment'
+                }), 403
+        elif payment_type == 'free':
+            if not PaymentApprovalService.can_create_free_account(g.current_user):
+                return jsonify({
+                    'error': 'Only Super Admin can create free accounts'
+                }), 403
+        
+        # Determine challenge status and payment status
+        if payment_type in ['cash', 'free']:
+            challenge_status = 'pending'
+            payment_status = 'pending'
+            approval_status = 'pending'
+        else:
+            challenge_status = 'pending'
+            payment_status = 'pending'
+            approval_status = 'approved'
+        
         # Create challenge
         challenge = Challenge(
-            user_id=g.current_user.id,
+            user_id=user_id,
             program_id=program_id,
-            status='pending',
+            status=challenge_status,
             initial_balance=program.account_size,
             current_balance=program.account_size,
             total_phases=1 if program.type == 'one_phase' else 2 if program.type == 'two_phase' else 3,
             addons=addon_ids,
-            payment_status='pending'
+            payment_status=payment_status,
+            payment_type=payment_type,
+            approval_status=approval_status,
+            created_by=g.current_user.id if user_id != g.current_user.id else None
         )
         
         db.session.add(challenge)
         db.session.commit()
         
-        # TODO: Create Stripe payment intent
+        # If cash or free payment, create approval request
+        if payment_type in ['cash', 'free']:
+            approval_request = PaymentApprovalService.create_approval_request(
+                challenge_id=challenge.id,
+                payment_id=None,
+                requested_by_id=g.current_user.id,
+                requested_for_id=user_id,
+                amount=total_price,
+                payment_type=payment_type
+            )
+            
+            return jsonify({
+                'message': 'Challenge created, awaiting Super Admin approval',
+                'challenge': challenge.to_dict(),
+                'approval_request': approval_request.to_dict(),
+                'total_price': float(total_price),
+                'payment_required': False,
+                'approval_required': True
+            }), 201
+        else:
+            # TODO: Create Stripe payment intent for credit card
+            return jsonify({
+                'message': 'Challenge created, awaiting payment',
+                'challenge': challenge.to_dict(),
+                'total_price': float(total_price),
+                'payment_required': True
+            }), 201
         
-        return jsonify({
-            'message': 'Challenge created, awaiting payment',
-            'challenge': challenge.to_dict(),
-            'total_price': float(total_price),
-            'payment_required': True
-        }), 201
-        
+    except ValueError as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Failed to purchase program'}), 500

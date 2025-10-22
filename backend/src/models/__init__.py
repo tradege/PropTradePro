@@ -12,6 +12,7 @@ from src.models.commission import Commission
 from src.models.withdrawal import Withdrawal
 from src.models.trade import Trade
 from src.models.payment import Payment
+from src.models.payment_approval import PaymentApprovalRequest
 
 __all__ = [
     'User',
@@ -28,6 +29,7 @@ __all__ = [
     'Withdrawal',
     'Trade',
     'Payment',
+    'PaymentApprovalRequest',
     'Lead',
     'LeadActivity',
     'LeadNote'

@@ -12,10 +12,18 @@ class Payment(db.Model):
     amount = db.Column(db.Numeric(10, 2), nullable=False)
     currency = db.Column(db.String(3), default='USD')
     payment_method = db.Column(db.String(50))  # stripe, paypal, crypto
+    payment_type = db.Column(db.String(20), default='credit_card', nullable=False)  # credit_card, cash, free
     
     # Transaction details
     transaction_id = db.Column(db.String(255), unique=True)
     status = db.Column(db.String(50), default='pending')  # pending, completed, failed, refunded
+    
+    # Approval system (for cash/free payments)
+    approval_status = db.Column(db.String(20), default='approved', nullable=False)  # pending, approved, rejected
+    approved_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    approved_at = db.Column(db.DateTime)
+    rejection_reason = db.Column(db.Text)
+    admin_notes = db.Column(db.Text)
     
     # Purpose
     purpose = db.Column(db.String(100))  # challenge_purchase, withdrawal
@@ -39,8 +47,13 @@ class Payment(db.Model):
             'amount': float(self.amount) if self.amount else None,
             'currency': self.currency,
             'payment_method': self.payment_method,
+            'payment_type': self.payment_type,
             'transaction_id': self.transaction_id,
             'status': self.status,
+            'approval_status': self.approval_status,
+            'approved_by': self.approved_by,
+            'approved_at': self.approved_at.isoformat() if self.approved_at else None,
+            'rejection_reason': self.rejection_reason,
             'purpose': self.purpose,
             'reference_id': self.reference_id,
             'created_at': self.created_at.isoformat() if self.created_at else None,

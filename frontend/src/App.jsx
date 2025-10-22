@@ -39,6 +39,7 @@ const UserManagement = lazy(() => import('./pages/admin/UserManagementConnected'
 const ProgramsManagement = lazy(() => import('./pages/admin/ProgramsManagement_mui'));
 const PaymentsManagement = lazy(() => import('./pages/admin/PaymentsManagementConnected'));
 const KYCApproval = lazy(() => import('./pages/admin/KYCApprovalConnected'));
+const PaymentApprovals = lazy(() => import('./pages/admin/PaymentApprovals'));
 const Settings = lazy(() => import('./pages/admin/Settings_mui'));
 
 // Agent Pages (Lazy Loaded)
@@ -270,6 +271,18 @@ function App() {
               <RoleGuard allowedRoles={['super_admin', 'admin']}>
                 <AdminLayout>
                   <KYCApproval />
+                </AdminLayout>
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/payment-approvals"
+          element={
+            <ProtectedRoute>
+              <RoleGuard allowedRoles={['supermaster']}>
+                <AdminLayout>
+                  <PaymentApprovals />
                 </AdminLayout>
               </RoleGuard>
             </ProtectedRoute>

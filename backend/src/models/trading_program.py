@@ -161,6 +161,16 @@ class Challenge(db.Model, TimestampMixin):
     # Payment
     payment_status = db.Column(db.String(20), default='pending')  # pending, paid, refunded
     payment_id = db.Column(db.String(100))
+    payment_type = db.Column(db.String(20), default='credit_card', nullable=False)  # credit_card, cash, free
+    
+    # Approval system (for cash/free payments)
+    approval_status = db.Column(db.String(20), default='approved', nullable=False)  # pending, approved, rejected
+    approved_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    approved_at = db.Column(db.DateTime)
+    rejection_reason = db.Column(db.Text)
+    
+    # Creator tracking
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))  # Who created this challenge (for cash payments)
     
     # Add-ons purchased
     addons = db.Column(JSONB, default=[])
@@ -214,6 +224,12 @@ class Challenge(db.Model, TimestampMixin):
             'current_phase': self.current_phase,
             'total_phases': self.total_phases,
             'payment_status': self.payment_status,
+            'payment_type': self.payment_type,
+            'approval_status': self.approval_status,
+            'approved_by': self.approved_by,
+            'approved_at': self.approved_at.isoformat() if self.approved_at else None,
+            'rejection_reason': self.rejection_reason,
+            'created_by': self.created_by,
             'progress': self.calculate_progress(),
             'addons': self.addons,
             'created_at': self.created_at.isoformat() if self.created_at else None

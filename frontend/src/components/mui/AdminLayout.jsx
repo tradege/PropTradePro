@@ -33,6 +33,7 @@ import {
   Logout,
   Home,
   ChevronRight,
+  Approval,
 } from '@mui/icons-material';
 import useAuthStore from '../../store/authStore';
 
@@ -43,6 +44,7 @@ const menuItems = [
   { title: 'Users', path: '/admin/users', icon: People, color: '#f093fb' },
   { title: 'Programs', path: '/admin/programs', icon: Assessment, color: '#4facfe' },
   { title: 'Payments', path: '/admin/payments', icon: Payment, color: '#43e97b' },
+  { title: 'Payment Approvals', path: '/admin/payment-approvals', icon: Approval, color: '#ff6b6b', superAdminOnly: true },
   { title: 'KYC Approval', path: '/admin/kyc', icon: VerifiedUser, color: '#fa709a' },
   { title: 'Settings', path: '/admin/settings', icon: Settings, color: '#a8edea' },
 ];
@@ -135,7 +137,9 @@ export default function AdminLayout({ children }) {
 
       {/* Navigation Menu */}
       <List sx={{ flex: 1, px: 2, py: 2 }}>
-        {menuItems.map((item) => {
+        {menuItems
+          .filter(item => !item.superAdminOnly || user?.role === 'supermaster')
+          .map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
