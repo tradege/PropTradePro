@@ -29,6 +29,7 @@ import {
   Home,
 } from '@mui/icons-material';
 import useAuthStore from '../../store/authStore';
+import Layout from '../layout/Layout';
 
 const drawerWidth = 260;
 
@@ -44,7 +45,12 @@ export default function UserLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useAuthStore();
+  const { user, logout, isAuthenticated } = useAuthStore();
+
+  // If user is not authenticated, use public Layout instead
+  if (!isAuthenticated) {
+    return <Layout>{children}</Layout>;
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
