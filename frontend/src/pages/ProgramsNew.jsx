@@ -24,7 +24,7 @@ export default function ProgramsNew() {
     setError(null);
     
     try {
-      const response = await axios.get(`${API_URL}/api/v1/programs/`);
+      const response = await axios.get('/api/v1/programs/');
       setPrograms(response.data.programs || []);
     } catch (error) {
       console.error('Error loading programs:', error);
