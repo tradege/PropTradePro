@@ -102,44 +102,6 @@ export default function NewHomePage() {
         </div>
       </section>
 
-      {/* Announcements */}
-      <section className="py-12 bg-slate-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Promotions */}
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-white">Active Promotions</h3>
-                <span className="px-3 py-1 bg-blue-500 rounded-full text-white text-sm font-semibold">LIVE</span>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                  <div>
-                    <div className="text-white font-semibold">20% OFF All Programs</div>
-                    <div className="text-gray-400 text-sm">Code: WELCOME20</div>
-                  </div>
-                  <div className="text-blue-400 font-bold">-20%</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Updates */}
-            <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-white">Latest Updates</h3>
-                <span className="px-3 py-1 bg-purple-500 rounded-full text-white text-sm font-semibold">NEW</span>
-              </div>
-              <div className="space-y-3">
-                <div className="p-3 bg-white/5 rounded-lg">
-                  <div className="text-white font-semibold mb-1">New Dashboard Launched</div>
-                  <div className="text-gray-400 text-sm">Advanced analytics and performance tracking</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Programs Section */}
       <section className="py-20 bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
