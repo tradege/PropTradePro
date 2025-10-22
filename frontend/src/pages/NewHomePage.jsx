@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Layout from '../components/layout/Layout';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export default function NewHomePage() {
   const [programs, setPrograms] = useState([]);
@@ -17,7 +17,7 @@ export default function NewHomePage() {
 
   const fetchPrograms = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/v1/programs/`);
+      const response = await axios.get(`${API_URL}/programs/`);
       setPrograms(response.data.programs || []);
     } catch (error) {
     } finally {
