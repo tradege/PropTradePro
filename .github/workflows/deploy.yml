@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -15,30 +16,36 @@ jobs:
       uses: actions/checkout@v3
       
     - name: Deploy to DigitalOcean
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.DO_HOST }}
         username: ${{ secrets.DO_USERNAME }}
         password: ${{ secrets.DO_PASSWORD }}
         script: |
+          echo "=== Starting deployment ==="
           cd /root/MarketEdgePros
           
-          # Pull latest changes
-          git pull origin main || git pull origin master
+          echo "=== Pulling latest code ==="
+          git pull origin master || git pull origin main
           
-          # Backend deployment
+          echo "=== Installing backend dependencies ==="
           cd backend
           pip3 install -r requirements.txt
-          sudo systemctl restart marketedgepros-backend
           
-          # Frontend deployment
+          echo "=== Restarting backend service ==="
+          sudo systemctl restart marketedgepros-backend || echo "Backend service not configured yet"
+          
+          echo "=== Building frontend ==="
           cd ../frontend
           npm install
           npm run build
-          sudo systemctl restart marketedgepros-frontend
           
-          # Restart Nginx
+          echo "=== Restarting frontend service ==="
+          sudo systemctl restart marketedgepros-frontend || echo "Frontend service not configured yet"
+          
+          echo "=== Restarting Nginx ==="
           sudo systemctl restart nginx
           
-          echo "Deployment completed successfully!"
+          echo "=== Deployment completed successfully ==="
+          echo "Website: https://marketedgepros.com"
 
