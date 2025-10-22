@@ -220,7 +220,7 @@ function App() {
           path="/admin"
           element={
             <ProtectedRoute>
-              <RoleGuard allowedRoles={['super_admin', 'admin']}>
+              <RoleGuard allowedRoles={['supermaster', 'super_admin', 'admin', 'master']}>
                 <AdminLayout>
                   <AdminDashboard />
                 </AdminLayout>
@@ -232,7 +232,7 @@ function App() {
           path="/admin/users"
           element={
             <ProtectedRoute>
-              <RoleGuard allowedRoles={['super_admin', 'admin']}>
+              <RoleGuard allowedRoles={['supermaster', 'super_admin', 'admin', 'master']}>
                 <AdminLayout>
                   <UserManagement />
                 </AdminLayout>
@@ -244,7 +244,7 @@ function App() {
           path="/admin/programs"
           element={
             <ProtectedRoute>
-              <RoleGuard allowedRoles={['super_admin', 'admin']}>
+              <RoleGuard allowedRoles={['supermaster', 'super_admin', 'admin', 'master']}>
                 <AdminLayout>
                   <ProgramsManagement />
                 </AdminLayout>
@@ -256,7 +256,7 @@ function App() {
           path="/admin/payments"
           element={
             <ProtectedRoute>
-              <RoleGuard allowedRoles={['super_admin', 'admin']}>
+              <RoleGuard allowedRoles={['supermaster', 'super_admin', 'admin', 'master']}>
                 <AdminLayout>
                   <PaymentsManagement />
                 </AdminLayout>
@@ -268,7 +268,7 @@ function App() {
           path="/admin/kyc"
           element={
             <ProtectedRoute>
-              <RoleGuard allowedRoles={['super_admin', 'admin']}>
+              <RoleGuard allowedRoles={['supermaster', 'super_admin', 'admin', 'master']}>
                 <AdminLayout>
                   <KYCApproval />
                 </AdminLayout>
@@ -292,7 +292,7 @@ function App() {
           path="/admin/settings"
           element={
             <ProtectedRoute>
-              <RoleGuard allowedRoles={['super_admin', 'admin']}>
+              <RoleGuard allowedRoles={['supermaster', 'super_admin', 'admin', 'master']}>
                 <AdminLayout>
                   <Settings />
                 </AdminLayout>
