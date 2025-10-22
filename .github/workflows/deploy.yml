@@ -1,0 +1,44 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Deploy to DigitalOcean
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DO_HOST }}
+        username: ${{ secrets.DO_USERNAME }}
+        password: ${{ secrets.DO_PASSWORD }}
+        script: |
+          cd /root/MarketEdgePros
+          
+          # Pull latest changes
+          git pull origin main || git pull origin master
+          
+          # Backend deployment
+          cd backend
+          pip3 install -r requirements.txt
+          sudo systemctl restart marketedgepros-backend
+          
+          # Frontend deployment
+          cd ../frontend
+          npm install
+          npm run build
+          sudo systemctl restart marketedgepros-frontend
+          
+          # Restart Nginx
+          sudo systemctl restart nginx
+          
+          echo "Deployment completed successfully!"
+
