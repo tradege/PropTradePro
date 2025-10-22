@@ -1,4 +1,4 @@
-# PropTradePro - Professional Prop Trading Platform
+# MarketEdgePros - Professional Prop Trading Platform
 
 A complete, production-ready prop trading platform similar to FXIFY, built with modern technologies and AI assistance.
 
@@ -22,7 +22,7 @@ A complete, production-ready prop trading platform similar to FXIFY, built with 
 
 ## 📋 Development Status
 
-This project is currently under active development. Check the [project board](https://github.com/tradege/PropTradePro/projects) for current status.
+This project is currently under active development. Check the [project board](https://github.com/tradege/MarketEdgePros/projects) for current status.
 
 ### Current Phase: Foundation & Infrastructure
 - [x] Repository setup

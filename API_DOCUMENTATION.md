@@ -1,4 +1,4 @@
-# PropTradePro API Documentation
+# MarketEdgePros API Documentation
 
 Base URL: `http://localhost:5000/api/v1`
 
@@ -25,7 +25,7 @@ Check API health status
 ```json
 {
   "status": "healthy",
-  "service": "PropTradePro API",
+  "service": "MarketEdgePros API",
   "version": "1.0.0"
 }
 ```
@@ -214,7 +214,7 @@ Enable 2FA for current user
 ```json
 {
   "message": "2FA secret generated",
-  "uri": "otpauth://totp/PropTradePro:user@example.com?secret=...",
+  "uri": "otpauth://totp/MarketEdgePros:user@example.com?secret=...",
   "secret": "JBSWY3DPEHPK3PXP"
 }
 ```

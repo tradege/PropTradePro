@@ -1,6 +1,6 @@
-# 🚀 PropTradePro Deployment Guide
+# 🚀 MarketEdgePros Deployment Guide
 
-Complete guide for deploying PropTradePro to production.
+Complete guide for deploying MarketEdgePros to production.
 
 ---
 
@@ -111,8 +111,8 @@ sudo systemctl restart redis
 
 ```bash
 cd /var/www
-git clone https://github.com/tradege/PropTradePro.git
-cd PropTradePro
+git clone https://github.com/tradege/MarketEdgePros.git
+cd MarketEdgePros
 ```
 
 ### 3.2 Create Production Environment File
@@ -217,7 +217,7 @@ sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com -d api.yourdomain.c
 ### 7.1 Build and Start Services
 
 ```bash
-cd /var/www/PropTradePro
+cd /var/www/MarketEdgePros
 
 # Build images
 docker-compose -f docker-compose.prod.yml build
@@ -452,7 +452,7 @@ python -c "from src.models import User; from src.database import db; from src.ap
 
 ## 🎉 Congratulations!
 
-Your PropTradePro platform is now live! 🚀
+Your MarketEdgePros platform is now live! 🚀
 
 **Next Steps:**
 1. Start marketing
@@ -461,7 +461,7 @@ Your PropTradePro platform is now live! 🚀
 4. Iterate and improve
 
 **Support:**
-- GitHub Issues: https://github.com/tradege/PropTradePro/issues
+- GitHub Issues: https://github.com/tradege/MarketEdgePros/issues
 - Documentation: See README.md and API_DOCUMENTATION.md
 
 ---

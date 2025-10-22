@@ -1,6 +1,6 @@
-# PropTradePro - Setup Guide
+# MarketEdgePros - Setup Guide
 
-This guide will help you set up and run the PropTradePro platform locally.
+This guide will help you set up and run the MarketEdgePros platform locally.
 
 ---
 
@@ -20,8 +20,8 @@ Before you begin, make sure you have:
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/tradege/PropTradePro.git
-cd PropTradePro
+git clone https://github.com/tradege/MarketEdgePros.git
+cd MarketEdgePros
 ```
 
 ### Step 2: Create Environment File
@@ -96,7 +96,7 @@ SendGrid allows you to send up to **100 emails/day for free**.
 3. **Create API Key**:
    - Go to Settings → API Keys
    - Click "Create API Key"
-   - Name: "PropTradePro"
+   - Name: "MarketEdgePros"
    - Permissions: "Full Access"
    - Click "Create & View"
 4. **Copy the API Key**: It starts with `SG.`
@@ -168,7 +168,7 @@ Expected response:
 ```json
 {
   "status": "healthy",
-  "service": "PropTradePro API",
+  "service": "MarketEdgePros API",
   "version": "1.0.0"
 }
 ```
@@ -278,7 +278,7 @@ Once running, you can access:
 
 ## 🎉 You're All Set!
 
-Your PropTradePro backend is now running with:
+Your MarketEdgePros backend is now running with:
 
 ✅ PostgreSQL database  
 ✅ Redis cache  

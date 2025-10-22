@@ -1,5 +1,5 @@
 """
-Configuration management for PropTradePro
+Configuration management for MarketEdgePros
 Supports multiple environments: development, staging, production
 """
 import os

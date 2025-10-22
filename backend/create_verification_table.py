@@ -3,7 +3,7 @@
 Create verification_attempts table
 """
 import sys
-sys.path.insert(0, '/home/ubuntu/PropTradePro/backend')
+sys.path.insert(0, '/home/ubuntu/MarketEdgePros/backend')
 
 from src.app import create_app
 from src.database import db

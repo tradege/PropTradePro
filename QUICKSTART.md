@@ -1,4 +1,4 @@
-# PropTradePro - Quick Start Guide
+# MarketEdgePros - Quick Start Guide
 
 ## 🚀 Running the Application
 
@@ -11,7 +11,7 @@
 
 1. **Navigate to frontend directory:**
 ```bash
-cd /home/ubuntu/PropTradePro/frontend
+cd /home/ubuntu/MarketEdgePros/frontend
 ```
 
 2. **Install dependencies (if not already installed):**
@@ -110,7 +110,7 @@ Create a `.env` file in the frontend directory:
 
 ```env
 VITE_API_URL=http://localhost:3000/api/v1
-VITE_APP_NAME=PropTradePro
+VITE_APP_NAME=MarketEdgePros
 ```
 
 ### Code Structure

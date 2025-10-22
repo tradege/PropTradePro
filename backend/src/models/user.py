@@ -119,7 +119,7 @@ class User(db.Model, TimestampMixin):
         totp = pyotp.TOTP(self.two_factor_secret)
         return totp.provisioning_uri(
             name=self.email,
-            issuer_name='PropTradePro'
+            issuer_name='MarketEdgePros'
         )
     
     def verify_2fa_token(self, token):

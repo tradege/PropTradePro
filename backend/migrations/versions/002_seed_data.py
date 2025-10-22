@@ -21,7 +21,7 @@ def upgrade() -> None:
     # Create default tenant
     op.execute("""
         INSERT INTO tenants (name, slug, is_active, branding_primary_color, branding_secondary_color, created_at, updated_at)
-        VALUES ('PropTradePro', 'proptradepro', true, '#3B82F6', '#1E40AF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        VALUES ('MarketEdgePros', 'proptradepro', true, '#3B82F6', '#1E40AF', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     """)
     
     # Create admin user (password: Admin@123)
