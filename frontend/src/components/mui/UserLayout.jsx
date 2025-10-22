@@ -47,8 +47,12 @@ export default function UserLayout({ children }) {
   const location = useLocation();
   const { user, logout, isAuthenticated } = useAuthStore();
 
-  // If user is not authenticated, use public Layout instead
-  if (!isAuthenticated) {
+  // Public pages that should always show Navbar (not sidebar)
+  const publicPages = ['/programs', '/program', '/how-it-works', '/about', '/faq', '/contact', '/terms', '/privacy'];
+  const isPublicPage = publicPages.some(page => location.pathname.startsWith(page));
+
+  // If user is not authenticated OR on a public page, use public Layout instead
+  if (!isAuthenticated || isPublicPage) {
     return <Layout>{children}</Layout>;
   }
 
