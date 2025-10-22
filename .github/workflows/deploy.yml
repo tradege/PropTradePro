@@ -1,0 +1,44 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Deploy to DigitalOcean
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.DO_HOST }}
+        username: ${{ secrets.DO_USERNAME }}
+        password: ${{ secrets.DO_PASSWORD }}
+        script: |
+          echo "=== Starting deployment ==="
+          cd /root/PropTradePro
+          
+          echo "=== Pulling latest code ==="
+          git pull origin master || git pull origin main
+          
+          echo "=== Installing backend dependencies ==="
+          cd backend
+          pip3 install -r requirements.txt
+          cd ..
+          
+          echo "=== Building frontend ==="
+          cd frontend
+          npm install
+          npm run build
+          cd ..
+          
+          echo "=== Restarting services ==="
+          systemctl restart nginx
+          
+          echo "=== Deployment completed successfully ==="
+          echo "Website: http://marketedgepros.com"
