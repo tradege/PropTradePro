@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, TrendingUp, Shield, Zap, ArrowRight, Target, Trophy, Gem } from 'lucide-react';
-import UserLayout from '../components/mui/UserLayout';
+import Layout from '../components/layout/Layout';
 import useAuthStore from '../store/authStore';
 import axios from 'axios';
 
@@ -97,7 +97,7 @@ export default function ProgramsNew() {
   ];
 
   return (
-    <UserLayout>
+    <Layout>
       <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
@@ -270,7 +270,7 @@ export default function ProgramsNew() {
           </div>
         </div>
       </div>
-    </UserLayout>
+    </Layout>
   );
 }
 
