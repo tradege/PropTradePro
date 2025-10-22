@@ -87,7 +87,7 @@ export default function ProgramsNew() {
     }
   };
 
-  const filteredPrograms = programs.filter(p => p.program_type === activeTab);
+  const filteredPrograms = programs.filter(p => p.type === activeTab);
 
   const tabs = [
     { id: 'two_phase', label: 'Two Phase', icon: Trophy, description: 'Most Popular' },
@@ -166,8 +166,8 @@ export default function ProgramsNew() {
               </div>
             ) : (
               filteredPrograms.map((program) => {
-                const badge = getProgramBadge(program.program_type);
-                const colorClass = getProgramColor(program.program_type);
+                const badge = getProgramBadge(program.type);
+                const colorClass = getProgramColor(program.type);
                 
                 return (
                   <div
@@ -180,7 +180,7 @@ export default function ProgramsNew() {
                         {badge.text}
                       </span>
                       <div className={`p-3 rounded-xl bg-gradient-to-r ${colorClass}`}>
-                        {getProgramIcon(program.program_type)}
+                        {getProgramIcon(program.type)}
                       </div>
                     </div>
 
@@ -208,7 +208,7 @@ export default function ProgramsNew() {
                     <div className="space-y-3 mb-8">
                       <div className="flex justify-between items-center">
                         <span className="text-gray-400">Account Size</span>
-                        <span className="text-white font-semibold">${program.initial_balance?.toLocaleString()}</span>
+                        <span className="text-white font-semibold">${program.account_size?.toLocaleString()}</span>
                       </div>
                       {program.profit_target > 0 && (
                         <div className="flex justify-between items-center">
