@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Check, TrendingUp, Shield, Zap, ArrowRight } from 'lucide-react';
 import UserLayout from '../components/mui/UserLayout';
 import useAuthStore from '../store/authStore';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://146.190.21.113:5000';
 
 export default function ProgramsNew() {
   const navigate = useNavigate();
@@ -20,23 +23,11 @@ export default function ProgramsNew() {
     setError(null);
     
     try {
-      const apiUrl = '/api/v1/programs/';
-      
-      const response = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      setPrograms(data.programs || []);
+      const response = await axios.get(`${API_URL}/api/v1/programs/`);
+      setPrograms(response.data.programs || []);
     } catch (error) {
-      setError(error.message);
+      console.error('Error loading programs:', error);
+      setError(error.message || 'Failed to load programs');
     } finally {
       setIsLoading(false);
     }
