@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, TrendingUp, Shield, Zap, ArrowRight } from 'lucide-react';
+import { Check, TrendingUp, Shield, Zap, ArrowRight, Target, Trophy, Gem } from 'lucide-react';
 import UserLayout from '../components/mui/UserLayout';
 import useAuthStore from '../store/authStore';
 import axios from 'axios';
@@ -13,6 +13,7 @@ export default function ProgramsNew() {
   const [programs, setPrograms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('two_phase'); // Default to most popular
 
   useEffect(() => {
     loadPrograms();
@@ -38,7 +39,11 @@ export default function ProgramsNew() {
       case 'instant_funding':
         return <Zap className="w-6 h-6" />;
       case 'one_phase':
-        return <TrendingUp className="w-6 h-6" />;
+        return <Target className="w-6 h-6" />;
+      case 'two_phase':
+        return <Trophy className="w-6 h-6" />;
+      case 'three_phase':
+        return <Gem className="w-6 h-6" />;
       default:
         return <Shield className="w-6 h-6" />;
     }
@@ -49,198 +54,223 @@ export default function ProgramsNew() {
       case 'instant_funding':
         return 'from-yellow-500 to-orange-600';
       case 'one_phase':
-        return 'from-green-500 to-emerald-600';
+        return 'from-blue-500 to-cyan-600';
       case 'two_phase':
-        return 'from-blue-500 to-indigo-600';
-      case 'three_phase':
         return 'from-purple-500 to-pink-600';
+      case 'three_phase':
+        return 'from-green-500 to-emerald-600';
       default:
         return 'from-gray-500 to-gray-600';
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="text-gray-600 mt-4">Loading programs...</p>
-        </div>
-      </div>
-    );
-  }
+  const getProgramBadge = (type) => {
+    switch (type) {
+      case 'instant_funding':
+        return { text: 'Instant', color: 'bg-yellow-500/20 text-yellow-400' };
+      case 'one_phase':
+        return { text: '1 Phase', color: 'bg-blue-500/20 text-blue-400' };
+      case 'two_phase':
+        return { text: '2 Phase', color: 'bg-purple-500/20 text-purple-400' };
+      case 'three_phase':
+        return { text: '3 Phase', color: 'bg-green-500/20 text-green-400' };
+      default:
+        return { text: 'Challenge', color: 'bg-gray-500/20 text-gray-400' };
+    }
+  };
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-red-600 text-xl font-bold mb-4">Error Loading Programs</div>
-          <p className="text-gray-600">{error}</p>
-          <button
-            onClick={loadPrograms}
-            className="mt-4 px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-            aria-label="Retry loading programs"
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const handleGetStarted = (programId) => {
+    if (!user) {
+      navigate('/login', { state: { from: `/programs/${programId}` } });
+    } else {
+      navigate(`/programs/${programId}/checkout`);
+    }
+  };
 
-  // Content component
-  const content = (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-primary-600 to-secondary-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4" role="heading" aria-level="1">
-              Choose Your Trading Challenge
+  const filteredPrograms = programs.filter(p => p.program_type === activeTab);
+
+  const tabs = [
+    { id: 'two_phase', label: 'Two Phase', icon: Trophy, description: 'Most Popular' },
+    { id: 'instant_funding', label: 'Instant Funding', icon: Zap, description: 'Fastest' },
+    { id: 'one_phase', label: 'One Phase', icon: Target, description: 'Direct' },
+    { id: 'three_phase', label: 'Three Phase', icon: Gem, description: 'Most Affordable' },
+  ];
+
+  return (
+    <UserLayout>
+      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+              Choose Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Challenge</span>
             </h1>
-            <p className="text-xl text-primary-100 max-w-2xl mx-auto">
-              Select the program that fits your trading style and start your journey to becoming a funded trader
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Select the program that fits your trading style and goals. All programs include up to 90% profit split and fast payouts.
             </p>
           </div>
-        </div>
-      </div>
 
-      {/* Programs Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-4 text-center text-gray-600">
-          Found {programs.length} program(s)
-        </div>
-        
-        {programs.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600">No programs available at the moment.</p>
-            <button
-              onClick={loadPrograms}
-              className="mt-4 px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-              aria-label="Reload programs list"
-            >
-              Reload
-            </button>
+          {/* Tabs */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`
+                    group relative px-8 py-4 rounded-xl font-semibold transition-all duration-300
+                    ${activeTab === tab.id
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/50 scale-105'
+                      : 'bg-slate-800/50 text-gray-400 hover:text-white hover:bg-slate-700/50'
+                    }
+                  `}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className="w-5 h-5" />
+                    <div className="text-left">
+                      <div className="font-bold">{tab.label}</div>
+                      <div className="text-xs opacity-75">{tab.description}</div>
+                    </div>
+                  </div>
+                  {activeTab === tab.id && (
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full" />
+                  )}
+                </button>
+              );
+            })}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {programs.map((program) => (
-              <div
-                key={program.id}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-              >
-                {/* Header */}
-                <div className={`bg-gradient-to-br ${getProgramColor(program.type)} p-6 text-white`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                      {getProgramIcon(program.type)}
-                    </div>
-                    {program.is_popular && (
-                      <span className="bg-white/20 px-3 py-1 rounded-full text-xs font-medium">
-                        Popular
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">{program.name}</h3>
-                  <p className="text-white/90 text-sm">{program.description || 'Professional trading challenge'}</p>
-                </div>
 
-                {/* Pricing */}
-                <div className="p-6 border-b border-gray-200">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-bold text-gray-900">${program.price}</span>
-                    <span className="text-gray-600">one-time</span>
-                  </div>
-                  <div className="mt-2 text-sm text-gray-600">
-                    Account Size: <span className="font-medium text-gray-900">${program.account_size?.toLocaleString()}</span>
-                  </div>
-                </div>
-
-                {/* Features */}
-                <div className="p-6 space-y-3">
-                  {program.profit_target && (
-                    <div className="flex items-center gap-3">
-                      <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                      <span className="text-gray-700">Profit Target: {program.profit_target}%</span>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span className="text-gray-700">Max Daily Loss: {program.max_daily_loss}%</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span className="text-gray-700">Max Total Loss: {program.max_total_loss}%</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span className="text-gray-700">Profit Split: {program.profit_split}%</span>
-                  </div>
-                  {program.min_trading_days && (
-                    <div className="flex items-center gap-3">
-                      <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                      <span className="text-gray-700">Min Trading Days: {program.min_trading_days}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* CTA */}
-                <div className="p-6 pt-0">
-                  <button
-                    onClick={() => navigate(`/programs/${program.id}`)}
-                    className="btn btn-primary w-full flex items-center justify-center gap-2"
-                  >
-                    Get Started
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
+          {/* Programs Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {isLoading ? (
+              <div className="col-span-full text-center text-gray-400 py-20">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                Loading programs...
               </div>
-            ))}
-          </div>
-        )}
+            ) : error ? (
+              <div className="col-span-full text-center text-red-400 py-20">
+                <p className="text-xl mb-4">⚠️ Error loading programs</p>
+                <p className="text-gray-400">{error}</p>
+                <button 
+                  onClick={loadPrograms}
+                  className="mt-6 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition"
+                >
+                  Try Again
+                </button>
+              </div>
+            ) : filteredPrograms.length === 0 ? (
+              <div className="col-span-full text-center text-gray-400 py-20">
+                <p className="text-xl">No programs available for this category</p>
+                <p className="text-sm mt-2">Please check back later or contact support</p>
+              </div>
+            ) : (
+              filteredPrograms.map((program) => {
+                const badge = getProgramBadge(program.program_type);
+                const colorClass = getProgramColor(program.program_type);
+                
+                return (
+                  <div
+                    key={program.id}
+                    className="group relative bg-gradient-to-b from-slate-800/80 to-slate-900/80 backdrop-blur-sm border border-blue-500/20 rounded-2xl p-8 hover:border-blue-500/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20"
+                  >
+                    {/* Badge */}
+                    <div className="flex items-center justify-between mb-6">
+                      <span className={`px-4 py-2 ${badge.color} rounded-full text-sm font-bold`}>
+                        {badge.text}
+                      </span>
+                      <div className={`p-3 rounded-xl bg-gradient-to-r ${colorClass}`}>
+                        {getProgramIcon(program.program_type)}
+                      </div>
+                    </div>
 
-        {/* Info Section */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full mb-4">
-              <TrendingUp className="w-8 h-8 text-primary-600" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Proven Track Record</h3>
-            <p className="text-gray-600">
-              Join thousands of successful traders who have achieved their funding goals
-            </p>
+                    {/* Program Name */}
+                    <h3 className="text-3xl font-bold text-white mb-3">
+                      {program.name}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-gray-400 mb-6 min-h-[60px]">
+                      {program.description}
+                    </p>
+
+                    {/* Price */}
+                    <div className="border-t border-gray-700 pt-6 mb-6">
+                      <div className="flex items-baseline justify-between">
+                        <div>
+                          <span className="text-4xl font-bold text-white">${program.price}</span>
+                          <span className="text-gray-400 ml-2">one-time</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Features */}
+                    <div className="space-y-3 mb-8">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-400">Account Size</span>
+                        <span className="text-white font-semibold">${program.initial_balance?.toLocaleString()}</span>
+                      </div>
+                      {program.profit_target > 0 && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Profit Target</span>
+                          <span className="text-green-400 font-semibold">{program.profit_target}%</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-400">Max Daily Loss</span>
+                        <span className="text-red-400 font-semibold">{program.max_daily_loss}%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-400">Profit Split</span>
+                        <span className="text-blue-400 font-semibold">{program.profit_split}%</span>
+                      </div>
+                    </div>
+
+                    {/* CTA Button */}
+                    <button
+                      onClick={() => handleGetStarted(program.id)}
+                      className={`
+                        w-full py-4 bg-gradient-to-r ${colorClass} rounded-xl text-white font-bold
+                        hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300
+                        flex items-center justify-center gap-2 group-hover:scale-105
+                      `}
+                    >
+                      Get Started
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                );
+              })
+            )}
           </div>
 
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-              <Shield className="w-8 h-8 text-green-600" />
+          {/* Features Section */}
+          <div className="mt-20 grid md:grid-cols-3 gap-8">
+            <div className="text-center p-6 bg-slate-800/50 rounded-xl border border-blue-500/20">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <Zap className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Fast Payouts</h3>
+              <p className="text-gray-400">Request payouts anytime, receive within 24 hours</p>
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Secure & Transparent</h3>
-            <p className="text-gray-600">
-              All trades are monitored in real-time with complete transparency
-            </p>
-          </div>
-
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
-              <Zap className="w-8 h-8 text-purple-600" />
+            <div className="text-center p-6 bg-slate-800/50 rounded-xl border border-blue-500/20">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+                <Trophy className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Up to 90% Split</h3>
+              <p className="text-gray-400">Keep up to 90% of your trading profits</p>
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">Fast Payouts</h3>
-            <p className="text-gray-600">
-              Get your profits paid out quickly with our streamlined process
-            </p>
+            <div className="text-center p-6 bg-slate-800/50 rounded-xl border border-blue-500/20">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                <Shield className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Secure & Reliable</h3>
+              <p className="text-gray-400">Your funds are safe with us, backed by industry leaders</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </UserLayout>
   );
-
-  // If user is logged in, wrap with UserLayout
-  if (user) {
-    return <UserLayout>{content}</UserLayout>;
-  }
-
-  // Otherwise, show standalone page
-  return content;
 }
 
