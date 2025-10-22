@@ -1,7 +1,7 @@
 .PHONY: help build up down logs shell db-shell test clean
 
 help:
-	@echo "PropTradePro - Available Commands:"
+	@echo "MarketEdgePros - Available Commands:"
 	@echo ""
 	@echo "  make build      - Build Docker containers"
 	@echo "  make up         - Start all services"

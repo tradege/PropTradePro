@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# PropTradePro Setup Script
-# This script sets up the PropTradePro platform on a fresh server
+# MarketEdgePros Setup Script
+# This script sets up the MarketEdgePros platform on a fresh server
 
 set -e
 
-echo "🚀 PropTradePro Setup"
+echo "🚀 MarketEdgePros Setup"
 echo "===================="
 echo ""
 
@@ -50,7 +50,7 @@ apt install -y -qq nginx postgresql-client git curl wget
 
 # Setup application
 echo "📂 Setting up application..."
-cd /var/www/PropTradePro
+cd /var/www/MarketEdgePros
 
 # Backend setup
 echo "⚙️  Configuring Backend..."
@@ -74,7 +74,7 @@ DATABASE_URL=${DATABASE_URL}
 
 CORS_ORIGINS=*
 
-UPLOAD_FOLDER=/var/www/PropTradePro/backend/uploads
+UPLOAD_FOLDER=/var/www/MarketEdgePros/backend/uploads
 MAX_CONTENT_LENGTH=16777216
 EOF
 
@@ -91,7 +91,7 @@ flask db upgrade
 echo "👤 Creating admin user..."
 python3 << 'PYSCRIPT'
 import sys
-sys.path.insert(0, '/var/www/PropTradePro/backend')
+sys.path.insert(0, '/var/www/MarketEdgePros/backend')
 
 try:
     from src.app import create_app, db
@@ -124,13 +124,13 @@ PYSCRIPT
 
 # Frontend setup
 echo "🎨 Building Frontend..."
-cd /var/www/PropTradePro/frontend
+cd /var/www/MarketEdgePros/frontend
 
 SERVER_IP=$(curl -s ifconfig.me)
 
 cat > .env.production << EOF
 VITE_API_URL=http://${SERVER_IP}:5000/api/v1
-VITE_APP_NAME=PropTradePro
+VITE_APP_NAME=MarketEdgePros
 EOF
 
 npm install --silent
@@ -159,7 +159,7 @@ server {
     listen 80 default_server;
     server_name _;
 
-    root /var/www/PropTradePro/frontend/dist;
+    root /var/www/MarketEdgePros/frontend/dist;
     index index.html;
 
     location / {
@@ -185,15 +185,15 @@ echo "🚀 Setting up Backend service..."
 
 cat > /etc/systemd/system/proptradepro.service << 'EOF'
 [Unit]
-Description=PropTradePro Backend API
+Description=MarketEdgePros Backend API
 After=network.target
 
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/var/www/PropTradePro/backend
-Environment="PATH=/var/www/PropTradePro/backend/venv/bin"
-ExecStart=/var/www/PropTradePro/backend/venv/bin/gunicorn -w 4 -b 127.0.0.1:8000 --timeout 300 "src.app:create_app()"
+WorkingDirectory=/var/www/MarketEdgePros/backend
+Environment="PATH=/var/www/MarketEdgePros/backend/venv/bin"
+ExecStart=/var/www/MarketEdgePros/backend/venv/bin/gunicorn -w 4 -b 127.0.0.1:8000 --timeout 300 "src.app:create_app()"
 Restart=always
 RestartSec=10
 
@@ -231,6 +231,6 @@ echo "   systemctl status proptradepro"
 echo "   journalctl -u proptradepro -f"
 echo "   systemctl restart proptradepro"
 echo ""
-echo "🎉 Enjoy your PropTradePro platform!"
+echo "🎉 Enjoy your MarketEdgePros platform!"
 echo ""
 
